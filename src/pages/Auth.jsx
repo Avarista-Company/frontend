@@ -146,7 +146,7 @@ const Auth = ({ isRegister = false }) => {
             <div>
               <Button
                 type="submit"
-                variant="wedding"
+                variant="accent"
                 className="w-full py-3"
                 disabled={loading}
               >

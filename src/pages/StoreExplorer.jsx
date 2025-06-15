@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import StoreCard from '../components/ui/StoreCard';
 import FilterSidebar from '../components/ui/FilterSidebar';
 import { stores as allStores } from '../data/stores';
+import { products as allProducts } from '../data/products';
 import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { Spinner, Skeleton } from '../components/common/Loading';
 
 const sortOptions = [
   { label: 'Best Match', value: 'best' },
@@ -19,11 +21,32 @@ const StoreExplorer = () => {
   const [activeFilters, setActiveFilters] = useState({});
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // desktop sidebar
   const [sortBy, setSortBy] = useState('best');
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [highlightedIndex, setHighlightedIndex] = useState(-1);
+  const inputRef = useRef();
 
   useEffect(() => {
     // In a real app, this would fetch from an API
     setStores(allStores);
   }, []);
+
+  useEffect(() => {
+    if (searchTerm.length > 0) {
+      const productMatches = allProducts.filter(p =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+      ).map(p => ({ type: 'product', label: p.name, id: p.id }));
+      const categoryMatches = Array.from(new Set(allProducts.map(p => p.category)))
+        .filter(cat => cat.toLowerCase().includes(searchTerm.toLowerCase()))
+        .map(cat => ({ type: 'category', label: cat }));
+      setSuggestions([...productMatches, ...categoryMatches]);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+    setHighlightedIndex(-1);
+  }, [searchTerm]);
 
   const handleFilterChange = (filters) => {
     setActiveFilters(filters);
@@ -39,6 +62,27 @@ const StoreExplorer = () => {
     // Sorting logic here
   };
 
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion.label);
+    setShowSuggestions(false);
+    if (suggestion.type === 'product') {
+      window.location.href = `/product/${suggestion.id}`;
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (!showSuggestions) return;
+    if (e.key === 'ArrowDown') {
+      setHighlightedIndex(i => Math.min(i + 1, suggestions.length - 1));
+    } else if (e.key === 'ArrowUp') {
+      setHighlightedIndex(i => Math.max(i - 1, 0));
+    } else if (e.key === 'Enter' && highlightedIndex >= 0) {
+      handleSuggestionClick(suggestions[highlightedIndex]);
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+    }
+  };
+
   const filteredStores = stores.filter(store => 
     store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     store.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -46,6 +90,10 @@ const StoreExplorer = () => {
       specialty.toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
+
+  if (stores.length === 0) {
+    return <Spinner className="h-96" />;
+  }
 
   return (
     <div className="container-padded py-8">
@@ -62,12 +110,38 @@ const StoreExplorer = () => {
             <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
           </div>
           <input
+            ref={inputRef}
             type="text"
             value={searchTerm}
             onChange={handleSearchChange}
-            placeholder="Search for stores, specialties..."
+            onFocus={() => setShowSuggestions(suggestions.length > 0)}
+            onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+            onKeyDown={handleKeyDown}
+            placeholder="Search for stores, products, categories..."
             className="pl-10 pr-4 py-2 border border-neutral-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary-400"
+            autoComplete="off"
           />
+          {showSuggestions && suggestions.length > 0 && (
+            <ul className="absolute z-20 left-0 right-0 bg-white border border-neutral-200 rounded shadow-lg mt-1 max-h-60 overflow-y-auto">
+              {suggestions.map((s, i) => (
+                <li
+                  key={s.type + s.label + s.id}
+                  className={`px-4 py-2 cursor-pointer flex items-center gap-2 ${highlightedIndex === i ? 'bg-primary-50 text-primary-700' : ''}`}
+                  onMouseDown={() => handleSuggestionClick(s)}
+                  onMouseEnter={() => setHighlightedIndex(i)}
+                >
+                  <span className="font-semibold text-primary-600">
+                    {s.type === 'product' ? 'Product:' : 'Category:'}
+                  </span>
+                  <span>
+                    {s.label.split(new RegExp(`(${searchTerm})`, 'gi')).map((part, idx) =>
+                      part.toLowerCase() === searchTerm.toLowerCase() ? <mark key={idx} className="bg-yellow-200 px-0.5 rounded">{part}</mark> : part
+                    )}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
         <div className="w-full md:w-auto flex items-center gap-2">
           <label htmlFor="sortBy" className="text-sm font-medium text-neutral-700 mr-2">Sort By:</label>
@@ -133,6 +207,16 @@ const StoreExplorer = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredStores.map(store => (
                 <StoreCard key={store.id} store={store} />
+              ))}
+            </div>
+          ) : stores.length === 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="card p-4">
+                  <Skeleton height="h-48" />
+                  <Skeleton height="h-6" className="mt-4 w-3/4" />
+                  <Skeleton height="h-4" className="mt-2 w-1/2" />
+                </div>
               ))}
             </div>
           ) : (

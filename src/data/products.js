@@ -2,7 +2,7 @@ export const products = [
   {
     id: 1,
     name: "Classic White Wedding Gown",
-    image: "https://via.placeholder.com/400x600?text=Wedding+Gown",
+    image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80",
     price: 1299.99,
     storeId: 1,
     category: "Bridal",
@@ -16,7 +16,7 @@ export const products = [
   {
     id: 2,
     name: "Navy Blue Tuxedo",
-    image: "https://via.placeholder.com/400x600?text=Navy+Tuxedo",
+    image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
     price: 799.99,
     storeId: 2,
     category: "Groom",
@@ -30,7 +30,7 @@ export const products = [
   {
     id: 3,
     name: "Blush Bridesmaid Dress",
-    image: "https://via.placeholder.com/400x600?text=Bridesmaid+Dress",
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
     price: 189.99,
     storeId: 1,
     category: "Bridesmaid",
@@ -44,7 +44,7 @@ export const products = [
   {
     id: 4,
     name: "Boys' Formal Suit",
-    image: "https://via.placeholder.com/400x600?text=Boys+Suit",
+    image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80",
     price: 129.99,
     storeId: 3,
     category: "Children",
@@ -58,7 +58,7 @@ export const products = [
   {
     id: 5,
     name: "Flower Girl Dress",
-    image: "https://via.placeholder.com/400x600?text=Flower+Girl+Dress",
+    image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
     price: 89.99,
     storeId: 3,
     category: "Children",
@@ -72,7 +72,7 @@ export const products = [
   {
     id: 6,
     name: "Mother of the Bride Dress",
-    image: "https://via.placeholder.com/400x600?text=Mother+Dress",
+    image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=400&q=80",
     price: 349.99,
     storeId: 3,
     category: "Family",
@@ -86,7 +86,7 @@ export const products = [
   {
     id: 7,
     name: "Diamond Tiara",
-    image: "https://via.placeholder.com/400x400?text=Diamond+Tiara",
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
     price: 599.99,
     storeId: 6,
     category: "Accessories",
@@ -100,7 +100,7 @@ export const products = [
   {
     id: 8,
     name: "Modern Minimalist Wedding Dress",
-    image: "https://via.placeholder.com/400x600?text=Modern+Wedding+Dress",
+    image: "https://images.unsplash.com/photo-1521747116042-5a810fda9664?auto=format&fit=crop&w=400&q=80",
     price: 899.99,
     storeId: 4,
     category: "Bridal",
@@ -114,7 +114,7 @@ export const products = [
   {
     id: 9,
     name: "Cultural Embroidered Wedding Lehenga",
-    image: "https://via.placeholder.com/400x600?text=Wedding+Lehenga",
+    image: "https://images.unsplash.com/photo-1521747116042-5a810fda9664?auto=format&fit=crop&w=400&q=80",
     price: 1499.99,
     storeId: 5,
     category: "Bridal",
@@ -128,7 +128,7 @@ export const products = [
   {
     id: 10,
     name: "Groomsmen Gift Set",
-    image: "https://via.placeholder.com/400x400?text=Groomsmen+Set",
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
     price: 149.99,
     storeId: 2,
     category: "Accessories",
@@ -142,7 +142,7 @@ export const products = [
   {
     id: 11,
     name: "Pearl Wedding Earrings",
-    image: "https://via.placeholder.com/400x400?text=Pearl+Earrings",
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
     price: 119.99,
     storeId: 6,
     category: "Accessories",
@@ -156,7 +156,7 @@ export const products = [
   {
     id: 12,
     name: "Custom Cultural Groom's Sherwani",
-    image: "https://via.placeholder.com/400x600?text=Sherwani",
+    image: "https://images.unsplash.com/photo-1521747116042-5a810fda9664?auto=format&fit=crop&w=400&q=80",
     price: 899.99,
     storeId: 5,
     category: "Groom",

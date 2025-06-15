@@ -24,7 +24,7 @@ const Button = ({
   const variantClasses = {
     primary: 'bg-primary-600 text-white hover:bg-primary-700',
     secondary: 'bg-secondary-700 text-white hover:bg-secondary-800',
-    accent: 'bg-accent-500 text-white hover:bg-accent-600',
+    accent: 'bg-accent-500 text-primary-900 hover:bg-accent-600 hover:text-white',
     wedding: 'bg-wedding-burgundy text-white hover:bg-opacity-90',
     outline: 'border border-neutral-300 text-neutral-700 hover:bg-neutral-100',
     text: 'text-primary-600 hover:text-primary-700 hover:underline',

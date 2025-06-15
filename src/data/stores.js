@@ -2,7 +2,7 @@ export const stores = [
   {
     id: 1,
     name: "Elegance Bridal",
-    image: "https://via.placeholder.com/400x300?text=Elegance+Bridal",
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
     distance: "0.5 miles",
     rating: 4.8,
     address: "123 Wedding Lane, Fashion District",
@@ -12,7 +12,7 @@ export const stores = [
   {
     id: 2,
     name: "Gentleman's Touch",
-    image: "https://via.placeholder.com/400x300?text=Gentlemans+Touch",
+    image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
     distance: "0.8 miles",
     rating: 4.7,
     address: "456 Tuxedo Avenue, Uptown",
@@ -22,7 +22,7 @@ export const stores = [
   {
     id: 3,
     name: "Family Formals",
-    image: "https://via.placeholder.com/400x300?text=Family+Formals",
+    image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=400&q=80",
     distance: "1.2 miles",
     rating: 4.5,
     address: "789 Celebration Road, Downtown",
@@ -32,7 +32,7 @@ export const stores = [
   {
     id: 4,
     name: "Modern Matrimony",
-    image: "https://via.placeholder.com/400x300?text=Modern+Matrimony",
+    image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=400&q=80",
     distance: "1.5 miles",
     rating: 4.9,
     address: "101 Contemporary Blvd, Arts District",
@@ -42,7 +42,7 @@ export const stores = [
   {
     id: 5,
     name: "Heritage Handcrafted",
-    image: "https://via.placeholder.com/400x300?text=Heritage+Handcrafted",
+    image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80",
     distance: "2.0 miles",
     rating: 4.6,
     address: "202 Cultural Avenue, Historic District",
@@ -52,7 +52,7 @@ export const stores = [
   {
     id: 6,
     name: "Accessory Haven",
-    image: "https://via.placeholder.com/400x300?text=Accessory+Haven",
+    image: "https://images.unsplash.com/photo-1519864600265-abb23847ef2c?auto=format&fit=crop&w=400&q=80",
     distance: "0.7 miles",
     rating: 4.7,
     address: "303 Sparkle Street, Jewelry Quarter",
@@ -62,7 +62,7 @@ export const stores = [
   {
     id: 7,
     name: "Bespoke Bride & Groom",
-    image: "https://via.placeholder.com/400x300?text=Bespoke+B%26G",
+    image: "https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?auto=format&fit=crop&w=400&q=80",
     distance: "1.8 miles",
     rating: 4.9,
     address: "404 Tailoring Terrace, Fashion District",
@@ -72,7 +72,7 @@ export const stores = [
   {
     id: 8,
     name: "Wedding Party Collective",
-    image: "https://via.placeholder.com/400x300?text=Wedding+Party",
+    image: "https://images.unsplash.com/photo-1514516870920-8f8f8f8f8f8f?auto=format&fit=crop&w=400&q=80",
     distance: "1.1 miles",
     rating: 4.6,
     address: "505 Celebration Circle, Downtown",
@@ -82,7 +82,7 @@ export const stores = [
   {
     id: 9,
     name: "Vintage Vows",
-    image: "https://via.placeholder.com/400x300?text=Vintage+Vows",
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
     distance: "2.2 miles",
     rating: 4.7,
     address: "606 Retro Road, Historic District",
@@ -92,7 +92,7 @@ export const stores = [
   {
     id: 10,
     name: "Budget Bliss",
-    image: "https://via.placeholder.com/400x300?text=Budget+Bliss",
+    image: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=400&q=80",
     distance: "1.0 miles",
     rating: 4.4,
     address: "707 Value Avenue, Shopping Center",

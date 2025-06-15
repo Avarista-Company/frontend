@@ -69,16 +69,24 @@ const Navbar = () => {
               </span>
             </Link>
             {currentUser ? (
-              <div className="relative group">
-                <button className="flex items-center space-x-2 focus:outline-none">
+              <div className="relative group" tabIndex={0} onBlur={e => setTimeout(() => { document.activeElement !== e.currentTarget && e.currentTarget.classList.remove('show'); }, 100)}>
+                <button
+                  className="flex items-center space-x-2 focus:outline-none"
+                  onClick={e => {
+                    const parent = e.currentTarget.parentElement;
+                    parent.classList.toggle('show');
+                  }}
+                  aria-haspopup="true"
+                  aria-expanded="false"
+                >
                   <img 
-                    src={currentUser.avatar} 
+                    src={currentUser.avatar.replace('via.placeholder.com/150', 'images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=100&q=80')} 
                     alt={currentUser.name}
                     className="h-8 w-8 rounded-full object-cover border-2 border-primary-200" 
                   />
                   <span className="text-base font-medium text-neutral-700">{currentUser.name}</span>
                 </button>
-                <div className="absolute right-0 w-52 mt-2 bg-white rounded-xl shadow-xl py-2 hidden group-hover:block">
+                <div className="absolute right-0 w-52 mt-2 bg-white rounded-xl shadow-xl py-2 hidden group-hover:block group-focus-within:block show:block">
                   {currentUser.role === 'retailer' && (
                     <Link 
                       to="/retailer-dashboard"

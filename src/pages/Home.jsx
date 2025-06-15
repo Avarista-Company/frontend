@@ -3,6 +3,8 @@ import HeroSection from '../components/ui/HeroSection';
 import FeaturedSection from '../components/ui/FeaturedSection';
 import NearbyStoresSection from '../components/ui/NearbyStoresSection';
 import { Link } from 'react-router-dom';
+import { Skeleton } from '../components/common/Loading';
+import TestimonialCarousel from '../components/ui/TestimonialCarousel';
 
 const Home = () => {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -18,7 +20,18 @@ const Home = () => {
     <div className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
       <HeroSection />
       
-      <FeaturedSection />
+      {isLoaded ? <FeaturedSection /> : (
+        <div className="section grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="card p-4">
+              <Skeleton height="h-48" />
+              <Skeleton height="h-6" className="mt-4 w-3/4" />
+              <Skeleton height="h-4" className="mt-2 w-1/2" />
+              <Skeleton height="h-4" className="mt-2 w-1/3" />
+            </div>
+          ))}
+        </div>
+      )}
       
       <NearbyStoresSection />
       
@@ -42,7 +55,7 @@ const Home = () => {
           
           <div className="rounded-lg overflow-hidden shadow-lg">
             <img 
-              src="https://via.placeholder.com/600x400?text=AR/VR+Demo" 
+              src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80" 
               alt="AR Try-On Experience"
               className="w-full h-auto" 
             />
@@ -55,7 +68,7 @@ const Home = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
           <div className="order-2 md:order-1 rounded-lg overflow-hidden shadow-lg">
             <img 
-              src="https://via.placeholder.com/600x400?text=AI+Feedback" 
+              src="https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80" 
               alt="AI Feedback System"
               className="w-full h-auto" 
             />
@@ -63,16 +76,16 @@ const Home = () => {
           
           <div className="order-1 md:order-2">
             <h2 className="text-3xl font-serif font-bold mb-4">
-              Get AI-Powered Style Feedback
+              Get AI-Powered Outfit Suggestions
             </h2>
             <p className="text-lg text-gray-700 mb-6">
-              Not sure if your outfit works? Our AI provides instant feedback on your selections, offering suggestions to perfect your wedding look.
+              Let our AI recommend the best styles for you based on your preferences and body type.
             </p>
             <Link 
               to="/ai-feedback"
-              className="btn-primary inline-block"
+              className="btn-accent inline-block"
             >
-              Get Feedback
+              Try AI Suggestions
             </Link>
           </div>
         </div>
@@ -134,76 +147,19 @@ const Home = () => {
         </div>
       </section>
       
-      {/* Testimonials Section */}
-      <section className="section bg-gray-50">
-        <h2 className="section-title">What Our Customers Say</h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center mb-4">
-              <img 
-                src="https://via.placeholder.com/60?text=E" 
-                alt="Customer"
-                className="w-12 h-12 rounded-full mr-4" 
-              />
-              <div>
-                <h4 className="font-medium">Emily & John</h4>
-                <p className="text-sm text-gray-500">Bride & Groom</p>
-              </div>
-            </div>
-            <p className="text-gray-700 italic">
-              "The community cart feature made it so easy to coordinate outfits with our entire wedding party. Everyone looked perfect on our big day!"
-            </p>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center mb-4">
-              <img 
-                src="https://via.placeholder.com/60?text=S" 
-                alt="Customer"
-                className="w-12 h-12 rounded-full mr-4" 
-              />
-              <div>
-                <h4 className="font-medium">Sarah Johnson</h4>
-                <p className="text-sm text-gray-500">Mother of the Bride</p>
-              </div>
-            </div>
-            <p className="text-gray-700 italic">
-              "Being able to try on dresses virtually saved me so much time. I found the perfect mother-of-the-bride dress without visiting dozens of stores."
-            </p>
-          </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex items-center mb-4">
-              <img 
-                src="https://via.placeholder.com/60?text=M" 
-                alt="Customer"
-                className="w-12 h-12 rounded-full mr-4" 
-              />
-              <div>
-                <h4 className="font-medium">Michael & Team</h4>
-                <p className="text-sm text-gray-500">Groomsmen</p>
-              </div>
-            </div>
-            <p className="text-gray-700 italic">
-              "The AI suggestions were spot on! It helped us coordinate our suits perfectly with the wedding theme, even though we were shopping from different cities."
-            </p>
-          </div>
-        </div>
-      </section>
-      
+      {/* Testimonial Section */}
+      <TestimonialCarousel />
+
       {/* CTA Section */}
-      <section className="py-16 bg-wedding-burgundy text-white">
+      <section className="py-20 bg-gradient-to-br from-primary-50 to-wedding-burgundy/10 text-wedding-burgundy relative">
         <div className="container-padded text-center">
-          <h2 className="text-3xl font-serif font-bold mb-4">
-            Ready to Start Shopping for Your Wedding?
-          </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-serif font-extrabold mb-4 tracking-tight animate-fade-in">Ready to Start Shopping for Your Wedding?</h2>
+          <p className="text-xl md:text-2xl mb-10 max-w-2xl mx-auto text-primary-900 animate-fade-in-slow">
             Create your account today and discover a new way to shop for wedding attire with your loved ones.
           </p>
           <Link 
             to="/register"
-            className="btn bg-white text-wedding-burgundy hover:bg-gray-100 px-8 py-3 text-lg font-medium"
+            className="inline-block btn bg-accent-500 text-primary-900 hover:bg-accent-600 hover:text-white px-10 py-4 text-xl font-semibold rounded-full shadow-lg transition-all duration-200 animate-fade-in-slower border-2 border-accent-400"
           >
             Get Started Free
           </Link>

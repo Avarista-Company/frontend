@@ -13,23 +13,11 @@ export default {
           200: '#c2d4ec',
           300: '#8fb2e0',
           400: '#4d8ed6',
-          500: '#2563eb', // deep blue
-          600: '#1d4ed8',
-          700: '#1e40af',
-          800: '#1e3a8a',
-          900: '#172554',
-        },
-        secondary: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b', // slate
-          600: '#475569',
-          700: '#334155',
-          800: '#1e293b',
-          900: '#0f172a',
+          500: '#1e3a8a', // royal blue
+          600: '#174ea6',
+          700: '#153e75',
+          800: '#102a43',
+          900: '#0a1a2f',
         },
         accent: {
           50: '#fffbe6',
@@ -37,11 +25,23 @@ export default {
           200: '#ffe066',
           300: '#ffd43b',
           400: '#fcc419',
-          500: '#fab005', // gold
+          500: '#fab005', // golden yellow
           600: '#f59f00',
           700: '#f08c00',
           800: '#e67700',
           900: '#d9480f',
+        },
+        teal: {
+          50: '#e6fcf5',
+          100: '#c3fae8',
+          200: '#96f2d7',
+          300: '#63e6be',
+          400: '#38d9a9',
+          500: '#20c997',
+          600: '#12b886',
+          700: '#0ca678',
+          800: '#099268',
+          900: '#087f5b',
         },
         neutral: {
           50: '#fafbfc',
@@ -55,18 +55,24 @@ export default {
           800: '#1f2937',
           900: '#111827',
         },
-        wedding: {
-          light: '#f9f5f6',
-          rose: '#f8e1e7',
-          gold: '#d4af37',
-          burgundy: '#800020',
-        }
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        serif: ['Playfair Display', 'serif'],
+        sans: ['Inter', 'ui-sans-serif', 'system-ui'],
+        serif: ['Merriweather', 'ui-serif', 'Georgia'],
+      },
+      boxShadow: {
+        card: '0 4px 24px 0 rgba(16, 42, 67, 0.08)',
+      },
+      keyframes: {
+        'carousel-scroll': {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
+      },
+      animation: {
+        'carousel-scroll': 'carousel-scroll 30s linear infinite',
       },
     },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/forms'), require('@tailwindcss/typography')],
 }
