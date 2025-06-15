@@ -1,249 +1,172 @@
-import { useState, useEffect } from 'react';
-import { useToast } from '../contexts/ToastContext';
+import { useState, useRef } from 'react';
 import { products } from '../data/products';
 import { AR_VR_MODELS } from '../utils/constants';
+import { useCart } from '../contexts/CartContext';
+
+// Luxury color palette
+const BG_GRADIENT = 'bg-gradient-to-br from-[#f8fafc] via-[#e0e7ff] to-[#fdf6e3]';
+const CHARCOAL = 'bg-[#23272a]';
+const GOLD = 'bg-[#ffd700]';
+const NAVY = 'bg-[#1e293b]';
+const CARD_SHADOW = 'shadow-[0_8px_32px_0_rgba(30,41,59,0.10)]';
 
 const TryOn = () => {
-  const [selectedModel, setSelectedModel] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedModel, setSelectedModel] = useState(AR_VR_MODELS.find(m => m.type === '3d') || AR_VR_MODELS[0]);
+  const [uploadedImage, setUploadedImage] = useState(null);
+  const [selectedProduct, setSelectedProduct] = useState(products[0]);
+  const [overlay, setOverlay] = useState({ scale: 1, x: 0, y: 0, rotation: 0 });
   const [isLoading, setIsLoading] = useState(false);
-  const [allProducts, setAllProducts] = useState([]);
-  const { addToast } = useToast();
-  
-  useEffect(() => {
-    // In a real app, this would fetch from an API
-    setAllProducts(products);
-  }, []);
-  
-  const handleModelSelect = (model) => {
-    setSelectedModel(model);
-    setIsLoading(true);
-    
-    // Simulate loading
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1500);
-  };
-  
-  const handleProductSelect = (e) => {
-    const productId = parseInt(e.target.value);
-    if (productId) {
-      const product = allProducts.find(p => p.id === productId);
-      setSelectedProduct(product);
-      setIsLoading(true);
-      
-      // Simulate loading
-      setTimeout(() => {
-        setIsLoading(false);
-        addToast('Virtual try-on complete!', 'success');
-      }, 1500);
-    } else {
-      setSelectedProduct(null);
+  const [fitFeedback, setFitFeedback] = useState('');
+  const fileInputRef = useRef();
+  const { addToCart } = useCart();
+
+  // Handle image upload
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => setUploadedImage(ev.target.result);
+      reader.readAsDataURL(file);
     }
   };
-  
+
+  // Overlay controls
+  const handleOverlayDrag = (e) => {
+    if (!selectedProduct) return;
+    const startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    const startY = e.type === 'touchstart' ? e.touches[0].clientY : e.clientY;
+    const startOverlay = { ...overlay };
+    const move = (moveEvent) => {
+      let clientX = moveEvent.type.startsWith('touch') ? moveEvent.touches[0].clientX : moveEvent.clientX;
+      let clientY = moveEvent.type.startsWith('touch') ? moveEvent.touches[0].clientY : moveEvent.clientY;
+      setOverlay((prev) => ({ ...prev, x: startOverlay.x + (clientX - startX), y: startOverlay.y + (clientY - startY) }));
+    };
+    const up = () => {
+      window.removeEventListener('mousemove', move);
+      window.removeEventListener('mouseup', up);
+      window.removeEventListener('touchmove', move);
+      window.removeEventListener('touchend', up);
+    };
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    window.addEventListener('touchmove', move);
+    window.addEventListener('touchend', up);
+  };
+  const handleZoom = (delta) => setOverlay((prev) => ({ ...prev, scale: Math.max(0.5, Math.min(2, prev.scale + delta)) }));
+  const handleRotate = (delta) => setOverlay((prev) => ({ ...prev, rotation: prev.rotation + delta }));
+  const handleReset = () => setOverlay({ scale: 1, x: 0, y: 0, rotation: 0 });
+
+  // Simulate fit feedback (dummy logic)
+  const getFitFeedback = () => {
+    if (!selectedProduct || !selectedModel) return '';
+    if (selectedProduct.sizes && selectedProduct.sizes.includes('L')) return 'Fits true to size';
+    if (selectedProduct.sizes && selectedProduct.sizes.includes('S')) return 'Runs a bit snug';
+    return 'Fit info unavailable';
+  };
+
+  // Loader for try-on
+  const handleTryOn = (product) => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setSelectedProduct(product);
+      setIsLoading(false);
+      setFitFeedback(getFitFeedback());
+    }, 800);
+  };
+
+  // Layout: full-width, immersive, broad
   return (
-    <div className="container-padded py-8">
-      <div className="mb-8 text-center">
-        <h1 className="text-3xl font-serif font-bold mb-2">Virtual Try-On Experience</h1>
-        <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-          See how clothing items will look before making a purchase. Select a model and choose an outfit to visualize it in AR/VR.
-        </p>
-      </div>
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Model Selection */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-medium mb-4">Select a Model</h2>
-          <div className="grid grid-cols-2 gap-4">
-            {AR_VR_MODELS.map((model) => (
-              <div 
-                key={model.id}
-                onClick={() => handleModelSelect(model)}
-                className={`cursor-pointer rounded-lg overflow-hidden border-2 transition-all ${
-                  selectedModel?.id === model.id
-                    ? 'border-primary-600 shadow-md scale-105'
-                    : 'border-transparent hover:border-gray-300'
-                }`}
-              >
-                <img 
-                  src={model.image} 
-                  alt={model.name}
-                  className="w-full h-48 object-cover" 
-                />
-                <div className="p-2 text-center">
-                  <p className="font-medium">{model.name}</p>
+    <div className={`min-h-screen w-full ${BG_GRADIENT} flex flex-col items-center justify-center py-0 px-0`}>
+      <div className="w-full max-w-[1800px] mx-auto flex flex-col gap-12 items-center justify-center min-h-screen">
+        {/* Immersive Try-On Display */}
+        <div className="w-full flex flex-col lg:flex-row gap-12 items-center justify-center py-12">
+          {/* Model/Avatar + Overlay */}
+          <div className="flex-1 flex flex-col items-center justify-center">
+            <div className={`relative w-[420px] h-[650px] rounded-[3rem] ${CARD_SHADOW} bg-white/90 flex items-center justify-center border-8 border-[#64748b]/30 overflow-hidden`} style={{backdropFilter:'blur(10px)'}}>
+              {isLoading ? (
+                <div className="flex flex-col items-center justify-center w-full h-full">
+                  <div className="animate-spin rounded-full h-20 w-20 border-b-4 border-[#ffd700] mb-6"></div>
+                  <span className="text-neutral-500 text-xl font-semibold">Loading...</span>
                 </div>
+              ) : (
+                <>
+                  {uploadedImage ? (
+                    <img src={uploadedImage} alt="User" className="w-full h-full object-cover rounded-[3rem] fade-in" />
+                  ) : (
+                    <img src={selectedModel.image} alt={selectedModel.name} className="w-full h-full object-cover rounded-[3rem] fade-in" />
+                  )}
+                  {/* Clothing Overlay with fade-in and shadow */}
+                  {selectedProduct && (
+                    <img
+                      src={selectedProduct.image}
+                      alt={selectedProduct.name}
+                      className="absolute left-1/2 top-1/2 object-contain drop-shadow-2xl transition-all duration-500 pointer-cursor fade-in"
+                      style={{
+                        width: `${overlay.scale * 80}%`,
+                        boxShadow: '0 8px 32px 0 rgba(30,41,59,0.18)',
+                        filter: 'drop-shadow(0 8px 32px #ffd70088)',
+                        transform: `translate(-50%, -50%) scale(${overlay.scale}) rotate(${overlay.rotation}deg) translate(${overlay.x}px, ${overlay.y}px)`
+                      }}
+                      draggable={false}
+                      onMouseDown={handleOverlayDrag}
+                      onTouchStart={handleOverlayDrag}
+                    />
+                  )}
+                  {/* Glass reflection effect */}
+                  <div className="absolute inset-0 pointer-events-none rounded-[3rem] bg-gradient-to-t from-white/30 via-transparent to-white/10 opacity-60" />
+                </>
+              )}
+            </div>
+            {/* Fit Feedback */}
+            {fitFeedback && (
+              <div className="mt-4 px-6 py-3 rounded-full bg-[#ffd700]/20 text-[#b68900] font-semibold text-base shadow fade-in">{fitFeedback}</div>
+            )}
+            {/* Model/controls */}
+            <div className="flex gap-3 mt-6 flex-wrap justify-center">
+              <button className="btn-outline text-base" onClick={() => fileInputRef.current.click()}>Upload Photo</button>
+              <input type="file" accept="image/*" ref={fileInputRef} className="hidden" onChange={handleImageUpload} />
+              <select className="btn-outline text-base" value={selectedModel.id} onChange={e => setSelectedModel(AR_VR_MODELS.find(m => m.id === Number(e.target.value)))}>
+                {AR_VR_MODELS.filter(m => m.type === '3d' || !m.type).map(model => (
+                  <option key={model.id} value={model.id}>{model.name}</option>
+                ))}
+              </select>
+              <button className="btn-outline px-4 py-2 text-base" onClick={() => handleZoom(0.1)}>Zoom In</button>
+              <button className="btn-outline px-4 py-2 text-base" onClick={() => handleZoom(-0.1)}>Zoom Out</button>
+              <button className="btn-outline px-4 py-2 text-base" onClick={() => handleRotate(10)}>Rotate Right</button>
+              <button className="btn-outline px-4 py-2 text-base" onClick={() => handleRotate(-10)}>Rotate Left</button>
+              <button className="btn-outline px-4 py-2 text-base" onClick={handleReset}>Reset</button>
+            </div>
+          </div>
+          {/* Product Details */}
+          <div className="w-full max-w-sm bg-white/95 rounded-3xl shadow-2xl border-4 border-[#64748b]/30 p-10 flex flex-col items-center">
+            <img src={selectedProduct.image} alt={selectedProduct.name} className="w-40 h-56 object-cover rounded-2xl mb-4 border border-neutral-200 shadow" />
+            <div className="font-bold text-[#23272a] text-2xl mb-2">{selectedProduct.name}</div>
+            <div className="text-sm text-neutral-500 mb-1">{selectedProduct.category}</div>
+            <div className="text-sm text-neutral-600 mb-1">Sizes: {selectedProduct.sizes?.join(', ')}</div>
+            <div className="text-sm text-neutral-600 mb-1">Colors: {selectedProduct.colors?.join(', ')}</div>
+            <div className="font-bold text-[#ffd700] text-2xl mb-4">${selectedProduct.price?.toFixed(2)}</div>
+            <button className="btn bg-[#23272a] text-[#ffd700] hover:bg-[#1e293b] w-full py-3 rounded-xl font-bold shadow mb-2 text-lg" onClick={() => addToCart(selectedProduct)}>
+              Add to Cart
+            </button>
+          </div>
+        </div>
+        {/* Clothing Selector Panel (carousel) */}
+        <div className="w-full max-w-[1700px] mx-auto mt-8">
+          <div className="flex items-center justify-between mb-4 px-2">
+            <h3 className="text-3xl font-bold text-[#23272a] tracking-tight">Try a New Look</h3>
+          </div>
+          <div className="flex gap-8 overflow-x-auto pb-6 scrollbar-thin scrollbar-thumb-[#64748b]/30 scrollbar-track-[#e0e7ff]/30 px-2">
+            {products.map(product => (
+              <div key={product.id} className={`rounded-3xl border-2 p-6 flex flex-col items-center bg-white/95 transition-all duration-200 min-w-[220px] max-w-[260px] ${selectedProduct?.id === product.id ? 'border-[#64748b]/60 scale-110 ring-2 ring-[#64748b]/60' : 'border-[#e0e7ff]/30'}`}> 
+                <img src={product.image} alt={product.name} className="w-32 h-48 object-cover rounded-2xl mb-3 border border-neutral-200 shadow" />
+                <div className="text-lg font-bold text-[#23272a] text-center mb-1">{product.name}</div>
+                <div className="text-xs text-neutral-500 mb-1">{product.category}</div>
+                <button className="btn bg-[#64748b] text-white hover:bg-[#334155] hover:text-white px-6 py-2 text-base font-bold rounded-full shadow mt-2" onClick={() => handleTryOn(product)}>
+                  Try Now
+                </button>
               </div>
             ))}
           </div>
-          
-          {selectedModel && (
-            <div className="mt-6">
-              <h3 className="font-medium mb-2">Selected: {selectedModel.name}</h3>
-              
-              <div className="mb-4">
-                <label htmlFor="product" className="block text-sm font-medium text-gray-700 mb-1">
-                  Choose an Outfit
-                </label>
-                <select
-                  id="product"
-                  value={selectedProduct?.id || ''}
-                  onChange={handleProductSelect}
-                  className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                >
-                  <option value="">Select an outfit</option>
-                  {allProducts
-                    .filter(p => p.gender.toLowerCase().includes(selectedModel.gender.toLowerCase()))
-                    .map(product => (
-                      <option key={product.id} value={product.id}>
-                        {product.name} - ${product.price.toFixed(2)}
-                      </option>
-                    ))
-                  }
-                </select>
-              </div>
-              
-              {selectedProduct && (
-                <div className="p-4 bg-gray-50 rounded-md">
-                  <h4 className="font-medium mb-2">{selectedProduct.name}</h4>
-                  <p className="text-sm text-gray-600 mb-2">{selectedProduct.description}</p>
-                  <p className="font-medium text-primary-600">${selectedProduct.price.toFixed(2)}</p>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-        
-        {/* AR/VR Viewer */}
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-md p-6 h-full">
-            <h2 className="text-xl font-medium mb-4">AR/VR Viewer</h2>
-            
-            {isLoading ? (
-              <div className="flex flex-col items-center justify-center h-96">
-                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary-600 mb-4"></div>
-                <p className="text-gray-600">Loading AR/VR experience...</p>
-              </div>
-            ) : selectedModel && selectedProduct ? (
-              <div className="flex flex-col h-full">
-                <div className="relative flex-grow bg-gray-100 rounded-lg overflow-hidden">
-                  {/* Simulated AR/VR view */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <img 
-                      src={selectedModel.image} 
-                      alt="AR/VR Preview"
-                      className="h-full object-contain" 
-                    />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <img 
-                        src={selectedProduct.image}
-                        alt={selectedProduct.name}
-                        className="h-3/4 object-contain opacity-90 rounded-lg"
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* AR/VR Controls (placeholders) */}
-                  <div className="absolute bottom-4 left-4 right-4 flex justify-center space-x-4">
-                    <button className="p-2 bg-white rounded-full shadow">
-                      <svg className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                    </button>
-                    
-                    <button className="p-2 bg-white rounded-full shadow">
-                      <svg className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                      </svg>
-                    </button>
-                    
-                    <button className="p-2 bg-white rounded-full shadow">
-                      <svg className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                      </svg>
-                    </button>
-                    
-                    <button className="p-2 bg-white rounded-full shadow">
-                      <svg className="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-                
-                <div className="mt-4 grid grid-cols-2 gap-4">
-                  <button className="btn-primary py-3">
-                    Add to Cart
-                  </button>
-                  <button className="btn-outline py-3">
-                    Try Another Item
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-96 text-center">
-                <svg className="h-16 w-16 text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">AR/VR Experience</h3>
-                <p className="text-gray-600 max-w-md">
-                  Select a model and an outfit from the panel on the left to see how the clothes will look in our virtual try-on experience.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      
-      {/* Additional Features */}
-      <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="w-12 h-12 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mb-4">
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-          </div>
-          <h3 className="text-lg font-medium mb-2">Upload Your Photo</h3>
-          <p className="text-gray-600 mb-4">
-            For a more personalized experience, upload your own photo to see how the outfits look on you.
-          </p>
-          <button className="btn-outline w-full">
-            Upload Photo
-          </button>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="w-12 h-12 bg-secondary-100 text-secondary-600 rounded-full flex items-center justify-center mb-4">
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
-          </div>
-          <h3 className="text-lg font-medium mb-2">Mix & Match</h3>
-          <p className="text-gray-600 mb-4">
-            Combine different items to create complete outfits. See how various pieces work together.
-          </p>
-          <button className="btn-outline w-full">
-            Open Outfit Builder
-          </button>
-        </div>
-        
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <div className="w-12 h-12 bg-accent-100 text-accent-600 rounded-full flex items-center justify-center mb-4">
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          <h3 className="text-lg font-medium mb-2">Share with Family</h3>
-          <p className="text-gray-600 mb-4">
-            Share your virtual try-on with family members to get their feedback and opinions.
-          </p>
-          <button className="btn-outline w-full">
-            Share Experience
-          </button>
         </div>
       </div>
     </div>
