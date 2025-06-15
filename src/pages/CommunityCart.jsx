@@ -6,6 +6,7 @@ import CartItem from '../components/ui/CartItem';
 import UserBadge from '../components/ui/UserBadge';
 import { users } from '../data/users';
 import { products } from '../data/products';
+import { Link } from 'react-router-dom';
 
 const CommunityCart = () => {
   const { cart, addToCart, removeFromCart, updateQuantity, totalPrice, communityUsers, addUserToCommunity, removeUserFromCommunity } = useCart();
@@ -68,6 +69,16 @@ const CommunityCart = () => {
         addToast('Failed to copy link', 'error');
       });
   };
+  
+  if (!currentUser) {
+    return (
+      <div className="container-padded py-16 text-center">
+        <h1 className="text-3xl font-serif font-bold mb-4">Sign in to access Community Cart</h1>
+        <p className="mb-6 text-lg text-neutral-600">You must be logged in to view and collaborate on the community cart.</p>
+        <Link to="/login" className="btn-primary px-8 py-3 text-lg">Sign In</Link>
+      </div>
+    );
+  }
   
   return (
     <div className="container-padded py-8">

@@ -8,7 +8,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { currentUser, logout } = useAuth();
   const location = useLocation();
-  
+
   const navigation = [
     { name: 'Home', to: '/' },
     { name: 'Stores', to: '/stores' },
@@ -16,7 +16,7 @@ const Navbar = () => {
     { name: 'AI Suggestions', to: '/ai-feedback' },
     { name: 'Community Cart', to: '/community-cart' },
   ];
-  
+
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 10) {
@@ -25,193 +25,129 @@ const Navbar = () => {
         setIsScrolled(false);
       }
     };
-    
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
+
   const closeMenu = () => {
     setIsMenuOpen(false);
   };
-  
+
   return (
     <nav 
       className={`fixed top-0 w-full z-30 transition-all duration-300 ${
-        isScrolled ? 'bg-white shadow-md py-2' : 'bg-transparent py-4'
+        isScrolled ? 'bg-white/90 shadow-lg backdrop-blur py-2' : 'bg-transparent py-4'
       }`}
     >
       <div className="container-padded">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-serif font-bold text-wedding-burgundy">Avarista</span>
+            <span className="text-3xl font-serif font-bold text-primary-700 tracking-tight">Avarista</span>
           </Link>
-          
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.to}
-                className={`text-sm font-medium transition-colors hover:text-primary-600 ${
+                className={`text-base font-medium transition-colors px-2 py-1 rounded-lg hover:text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-400 ${
                   location.pathname === item.to
-                    ? 'text-primary-600 border-b-2 border-primary-600'
-                    : 'text-gray-700'
+                    ? 'text-primary-700 bg-primary-100' : 'text-neutral-700'
                 }`}
               >
                 {item.name}
               </Link>
             ))}
           </div>
-          
           {/* User Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link to="/community-cart" className="relative p-2 text-gray-700 hover:text-primary-600">
+            <Link to="/community-cart" className="relative p-2 text-neutral-700 hover:text-primary-600">
               <ShoppingBagIcon className="h-6 w-6" />
-              <span className="absolute top-0 right-0 bg-accent-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+              <span className="absolute -top-1 -right-1 bg-accent-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center shadow-md">
                 0
               </span>
             </Link>
-            
             {currentUser ? (
               <div className="relative group">
                 <button className="flex items-center space-x-2 focus:outline-none">
                   <img 
                     src={currentUser.avatar} 
                     alt={currentUser.name}
-                    className="h-8 w-8 rounded-full object-cover" 
+                    className="h-8 w-8 rounded-full object-cover border-2 border-primary-200" 
                   />
-                  <span className="text-sm font-medium text-gray-700">{currentUser.name}</span>
+                  <span className="text-base font-medium text-neutral-700">{currentUser.name}</span>
                 </button>
-                
-                <div className="absolute right-0 w-48 mt-2 bg-white rounded-md shadow-lg py-1 hidden group-hover:block">
+                <div className="absolute right-0 w-52 mt-2 bg-white rounded-xl shadow-xl py-2 hidden group-hover:block">
                   {currentUser.role === 'retailer' && (
                     <Link 
                       to="/retailer-dashboard"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-base text-neutral-700 hover:bg-primary-50 rounded-lg"
                     >
                       Dashboard
                     </Link>
                   )}
                   <Link 
                     to="/profile"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block px-4 py-2 text-base text-neutral-700 hover:bg-primary-50 rounded-lg"
                   >
                     Profile
                   </Link>
-                  <button 
+                  <button
                     onClick={logout}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                    className="block w-full text-left px-4 py-2 text-base text-red-600 hover:bg-red-50 rounded-lg"
                   >
                     Logout
                   </button>
                 </div>
               </div>
             ) : (
-              <Link 
-                to="/login"
-                className="flex items-center space-x-1 text-sm font-medium text-gray-700 hover:text-primary-600"
-              >
-                <UserIcon className="h-5 w-5" />
-                <span>Login</span>
-              </Link>
+              <Link to="/login" className="btn-outline px-5 py-2 text-base">Sign In</Link>
             )}
           </div>
-          
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-gray-900 focus:outline-none"
-            >
-              {isMenuOpen ? (
-                <XMarkIcon className="h-6 w-6" />
-              ) : (
-                <Bars3Icon className="h-6 w-6" />
-              )}
-            </button>
-          </div>
+          <button
+            className="md:hidden p-2 rounded-lg text-neutral-700 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-400"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Open menu"
+          >
+            {isMenuOpen ? <XMarkIcon className="h-7 w-7" /> : <Bars3Icon className="h-7 w-7" />}
+          </button>
         </div>
       </div>
-      
       {/* Mobile Menu */}
-      <div
-        className={`md:hidden absolute w-full bg-white shadow-md transition-all duration-300 overflow-hidden ${
-          isMenuOpen ? 'max-h-screen pt-4 pb-6' : 'max-h-0'
-        }`}
-      >
-        <div className="container-padded flex flex-col space-y-4">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              to={item.to}
-              className={`text-base font-medium py-2 ${
-                location.pathname === item.to
-                  ? 'text-primary-600'
-                  : 'text-gray-700'
-              }`}
-              onClick={closeMenu}
-            >
-              {item.name}
-            </Link>
-          ))}
-          
-          <div className="pt-4 border-t border-gray-200">
-            {currentUser ? (
-              <>
-                <div className="flex items-center space-x-3 mb-4">
-                  <img 
-                    src={currentUser.avatar} 
-                    alt={currentUser.name}
-                    className="h-10 w-10 rounded-full object-cover" 
-                  />
-                  <div>
-                    <p className="text-sm font-medium text-gray-900">{currentUser.name}</p>
-                    <p className="text-xs text-gray-500">{currentUser.email}</p>
-                  </div>
-                </div>
-                
-                {currentUser.role === 'retailer' && (
-                  <Link 
-                    to="/retailer-dashboard"
-                    className="block py-2 text-base font-medium text-gray-700"
-                    onClick={closeMenu}
-                  >
-                    Retailer Dashboard
-                  </Link>
-                )}
-                
-                <Link 
-                  to="/profile"
-                  className="block py-2 text-base font-medium text-gray-700"
-                  onClick={closeMenu}
-                >
-                  Profile
-                </Link>
-                
-                <button 
-                  onClick={() => {
-                    logout();
-                    closeMenu();
-                  }}
-                  className="block w-full text-left py-2 text-base font-medium text-gray-700"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <Link 
-                to="/login"
-                className="flex items-center space-x-2 py-2 text-base font-medium text-gray-700"
+      {isMenuOpen && (
+        <div className="md:hidden bg-white/95 shadow-xl backdrop-blur border-t border-neutral-100">
+          <div className="container-padded py-4 flex flex-col gap-3">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.to}
+                className={`text-base font-medium px-3 py-2 rounded-lg transition-colors hover:text-primary-600 hover:bg-primary-50 focus:outline-none focus:ring-2 focus:ring-primary-400 ${
+                  location.pathname === item.to
+                    ? 'text-primary-700 bg-primary-100' : 'text-neutral-700'
+                }`}
                 onClick={closeMenu}
               >
-                <UserIcon className="h-5 w-5" />
-                <span>Login / Register</span>
+                {item.name}
               </Link>
-            )}
+            ))}
+            <div className="mt-2">
+              {currentUser ? (
+                <>
+                  <Link to="/profile" className="block px-3 py-2 text-base text-neutral-700 hover:bg-primary-50 rounded-lg" onClick={closeMenu}>Profile</Link>
+                  {currentUser.role === 'retailer' && (
+                    <Link to="/retailer-dashboard" className="block px-3 py-2 text-base text-neutral-700 hover:bg-primary-50 rounded-lg" onClick={closeMenu}>Dashboard</Link>
+                  )}
+                  <button onClick={logout} className="block w-full text-left px-3 py-2 text-base text-red-600 hover:bg-red-50 rounded-lg">Logout</button>
+                </>
+              ) : (
+                <Link to="/login" className="btn-outline px-5 py-2 text-base w-full block text-center" onClick={closeMenu}>Sign In</Link>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 };

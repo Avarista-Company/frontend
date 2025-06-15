@@ -10,7 +10,7 @@ const Modal = ({
   size = 'md' 
 }) => {
   const cancelButtonRef = useRef(null);
-  
+
   const sizeClasses = {
     sm: 'max-w-md',
     md: 'max-w-lg',
@@ -18,7 +18,7 @@ const Modal = ({
     xl: 'max-w-4xl',
     full: 'max-w-full mx-4'
   };
-  
+
   return (
     <Transition.Root show={isOpen} as={Fragment}>
       <Dialog 
@@ -37,14 +37,14 @@ const Modal = ({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Dialog.Overlay className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+            <Dialog.Overlay className="fixed inset-0 bg-neutral-900 bg-opacity-60 transition-opacity" />
           </Transition.Child>
 
           {/* This element is to trick the browser into centering the modal contents. */}
           <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
             &#8203;
           </span>
-          
+
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -54,24 +54,22 @@ const Modal = ({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className={`inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle ${sizeClasses[size]} w-full`}>
-              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+            <div className={`inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:align-middle ${sizeClasses[size]} w-full`}>
+              <div className="bg-white px-6 pt-6 pb-4 sm:p-8 sm:pb-6">
                 <div className="flex items-start justify-between">
-                  <Dialog.Title as="h3" className="text-lg font-medium leading-6 text-gray-900">
+                  <Dialog.Title as="h3" className="text-2xl font-serif font-bold text-neutral-900">
                     {title}
                   </Dialog.Title>
                   <button
                     type="button"
-                    className="bg-white rounded-md text-gray-400 hover:text-gray-500 focus:outline-none"
+                    className="ml-3 rounded-full bg-neutral-100 p-2 text-neutral-500 hover:bg-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary-400"
                     onClick={onClose}
+                    ref={cancelButtonRef}
                   >
-                    <span className="sr-only">Close</span>
-                    <XMarkIcon className="h-6 w-6" aria-hidden="true" />
+                    <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>
-                <div className="mt-4">
-                  {children}
-                </div>
+                <div className="mt-4">{children}</div>
               </div>
             </div>
           </Transition.Child>

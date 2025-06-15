@@ -8,9 +8,9 @@ const Card = ({
   padding = true,
   ...rest 
 }) => {
-  const baseClasses = 'bg-white rounded-lg shadow-md overflow-hidden';
-  const hoverClasses = hoverable ? 'transition-transform duration-300 hover:shadow-lg hover:-translate-y-1' : '';
-  const paddingClasses = padding ? 'p-4' : '';
+  const baseClasses = 'bg-white rounded-xl shadow-lg overflow-hidden';
+  const hoverClasses = hoverable ? 'transition-transform duration-200 hover:shadow-xl hover:-translate-y-1' : '';
+  const paddingClasses = padding ? 'p-6' : '';
   
   return (
     <div 

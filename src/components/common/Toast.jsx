@@ -22,12 +22,13 @@ const Toast = ({ id, message, type = 'success', duration = 3000, onClose }) => {
   
   return (
     <div 
-      className={`px-4 py-3 rounded-lg shadow-lg flex items-center justify-between ${bgColorClass[type]} text-white`}
+      className={`px-5 py-3 rounded-xl shadow-2xl flex items-center justify-between ${bgColorClass[type]} text-white animate-fade-in-up`}
+      style={{ minWidth: 280 }}
     >
-      <span>{message}</span>
+      <span className="font-medium text-base">{message}</span>
       <button 
         onClick={() => onClose(id)}
-        className="ml-3 text-white opacity-70 hover:opacity-100"
+        className="ml-4 text-white opacity-80 hover:opacity-100 rounded-full focus:outline-none focus:ring-2 focus:ring-white"
       >
         <XMarkIcon className="h-5 w-5" />
       </button>
