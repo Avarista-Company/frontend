@@ -100,3 +100,5 @@ export const stores = [
     description: "Beautiful wedding attire at accessible price points, perfect for couples planning a wedding on a budget."
   }
 ];
+
+export default stores;

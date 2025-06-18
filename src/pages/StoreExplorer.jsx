@@ -6,6 +6,7 @@ import { stores as allStores } from '../data/stores';
 import { products as allProducts } from '../data/products';
 import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import { Spinner, Skeleton } from '../components/common/Loading';
+import StoreMap from './StoreMap';
 
 const sortOptions = [
   { label: 'Best Match', value: 'best' },
@@ -96,8 +97,11 @@ const StoreExplorer = () => {
   }
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-[#f8fafc] via-[#e0e7ff] to-[#fdf6e3] flex flex-col items-center justify-center py-0 px-0">
-      <div className="w-full max-w-[1800px] mx-auto flex flex-col gap-8 items-center justify-center min-h-screen px-4">
+    <div className="w-full min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-[#f8fafc] via-[#e0e7ff] to-[#fdf6e3]">
+      <div className="w-full max-w-7xl mx-auto px-4 py-8">
+        <h1 className="text-4xl font-bold mb-8 text-[#23272a]">Explore Stores</h1>
+        {/* Map-based store discovery */}
+        <StoreMap />
         <div className="mb-8 w-full max-w-6xl mx-auto">
           <h1 className="text-4xl font-serif font-bold mb-2">Find Stores Near You</h1>
           <p className="text-xl text-gray-600">
