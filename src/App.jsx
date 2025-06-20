@@ -17,6 +17,7 @@ import RetailerDashboard from './pages/RetailerDashboard';
 import NotFound from './pages/NotFound';
 import ProductDetail from './pages/ProductDetail';
 import Profile from './pages/Profile';
+import Cart from './pages/Cart'; // Add this import
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
                 <Route path="/try-on" element={<TryOn />} />
                 <Route path="/ai-feedback" element={<AiFeedback />} />
                 <Route path="/community-cart" element={<CommunityCart />} />
+                <Route path="/cart" element={<Cart />} /> {/* Add this route */}
                 <Route path="/login" element={<Auth />} />
                 <Route path="/register" element={<Auth isRegister />} />
                 <Route path="/retailer-dashboard" element={<RetailerDashboard />} />

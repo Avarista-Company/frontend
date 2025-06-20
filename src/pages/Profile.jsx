@@ -1,6 +1,7 @@
 import { useAuth } from '../contexts/AuthContext';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { stores } from '../data/stores';
 
 // Mock order and wishlist data
 const mockOrders = [
@@ -121,6 +122,29 @@ const Profile = () => {
                     <button className="btn-outline w-full">Remove</button>
                   </div>
                 ))}
+              </div>
+            )}
+          </div>
+          {/* Liked Stores */}
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <h3 className="text-xl font-semibold mb-4">Liked Stores</h3>
+            {(!currentUser.likedStores || currentUser.likedStores.length === 0) ? (
+              <p className="text-neutral-500">You haven't liked any stores yet.</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                {currentUser.likedStores.map(storeId => {
+                  const store = stores.find(s => s.id === storeId);
+                  if (!store) return null;
+                  return (
+                    <div key={store.id} className="card flex flex-col items-center p-4">
+                      <img src={store.image} alt={store.name} className="w-24 h-24 object-cover rounded mb-2" />
+                      <div className="font-medium text-neutral-900 mb-1">{store.name}</div>
+                      <div className="text-primary-700 font-bold mb-2">{store.distance}</div>
+                      <div className="text-neutral-500 text-sm mb-2">{store.address}</div>
+                      <Link to={`/stores/${store.id}`} className="btn-outline w-full">View Store</Link>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>

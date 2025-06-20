@@ -4,7 +4,7 @@ import StoreCard from '../components/ui/StoreCard';
 import FilterSidebar from '../components/ui/FilterSidebar';
 import { stores as allStores } from '../data/stores';
 import { products as allProducts } from '../data/products';
-import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
+import { MagnifyingGlassIcon, AdjustmentsHorizontalIcon } from '@heroicons/react/24/outline';
 import { Spinner, Skeleton } from '../components/common/Loading';
 import StoreMap from './StoreMap';
 
@@ -20,7 +20,6 @@ const StoreExplorer = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [activeFilters, setActiveFilters] = useState({});
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // desktop sidebar
   const [sortBy, setSortBy] = useState('best');
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -28,7 +27,6 @@ const StoreExplorer = () => {
   const inputRef = useRef();
 
   useEffect(() => {
-    // In a real app, this would fetch from an API
     setStores(allStores);
   }, []);
 
@@ -49,20 +47,9 @@ const StoreExplorer = () => {
     setHighlightedIndex(-1);
   }, [searchTerm]);
 
-  const handleFilterChange = (filters) => {
-    setActiveFilters(filters);
-    // In a real app, this would apply the filters to the data
-  };
-
-  const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleSortChange = (e) => {
-    setSortBy(e.target.value);
-    // Sorting logic here
-  };
-
+  const handleFilterChange = (filters) => setActiveFilters(filters);
+  const handleSearchChange = (e) => setSearchTerm(e.target.value);
+  const handleSortChange = (e) => setSortBy(e.target.value);
   const handleSuggestionClick = (suggestion) => {
     setSearchTerm(suggestion.label);
     setShowSuggestions(false);
@@ -70,7 +57,6 @@ const StoreExplorer = () => {
       window.location.href = `/product/${suggestion.id}`;
     }
   };
-
   const handleKeyDown = (e) => {
     if (!showSuggestions) return;
     if (e.key === 'ArrowDown') {
@@ -84,10 +70,10 @@ const StoreExplorer = () => {
     }
   };
 
-  const filteredStores = stores.filter(store => 
+  const filteredStores = stores.filter(store =>
     store.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     store.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    store.specialties.some(specialty => 
+    store.specialties.some(specialty =>
       specialty.toLowerCase().includes(searchTerm.toLowerCase())
     )
   );
@@ -97,23 +83,12 @@ const StoreExplorer = () => {
   }
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center justify-start bg-gradient-to-br from-[#f8fafc] via-[#e0e7ff] to-[#fdf6e3]">
-      <div className="w-full max-w-7xl mx-auto px-4 py-8">
-        <h1 className="text-4xl font-bold mb-8 text-[#23272a]">Explore Stores</h1>
-        {/* Map-based store discovery */}
-        <StoreMap />
-        <div className="mb-8 w-full max-w-6xl mx-auto">
-          <h1 className="text-4xl font-serif font-bold mb-2">Find Stores Near You</h1>
-          <p className="text-xl text-gray-600">
-            Discover local stores specializing in fashion for every occasion.
-          </p>
-        </div>
-        {/* Search, Sort, and Filter Controls */}
-        <div className="flex flex-col md:flex-row items-center mb-8 gap-4 w-full max-w-6xl mx-auto">
-          <div className="w-full md:w-auto flex-1 relative">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-            </div>
+    <main className="w-full min-h-screen bg-white flex flex-col items-center">
+      <section className="w-full max-w-7xl mx-auto px-2 py-5">
+        <h1 className="text-4xl md:text-5xl font-bold mb-8 text-neutral-900 text-center">Explore Local Stores</h1>
+        <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
+          <div className="w-full md:w-1/2 relative">
+            <MagnifyingGlassIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-neutral-400" />
             <input
               ref={inputRef}
               type="text"
@@ -123,7 +98,7 @@ const StoreExplorer = () => {
               onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
               onKeyDown={handleKeyDown}
               placeholder="Search for stores, products, categories..."
-              className="pl-10 pr-4 py-2 border border-neutral-300 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-primary-400"
+              className="pl-10 pr-4 py-2 border border-neutral-200 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-primary-400 bg-neutral-50"
               autoComplete="off"
             />
             {showSuggestions && suggestions.length > 0 && (
@@ -138,11 +113,7 @@ const StoreExplorer = () => {
                     <span className="font-semibold text-primary-600">
                       {s.type === 'product' ? 'Product:' : 'Category:'}
                     </span>
-                    <span>
-                      {s.label.split(new RegExp(`(${searchTerm})`, 'gi')).map((part, idx) =>
-                        part.toLowerCase() === searchTerm.toLowerCase() ? <mark key={idx} className="bg-yellow-200 px-0.5 rounded">{part}</mark> : part
-                      )}
-                    </span>
+                    <span>{s.label}</span>
                   </li>
                 ))}
               </ul>
@@ -154,82 +125,42 @@ const StoreExplorer = () => {
               id="sortBy"
               value={sortBy}
               onChange={handleSortChange}
-              className="border border-neutral-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-400"
+              className="input w-40"
             >
-              {sortOptions.map(option => (
-                <option key={option.value} value={option.value}>{option.label}</option>
+              {sortOptions.map(opt => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </select>
-          </div>
-          <button
-            onClick={() => setIsMobileFilterOpen(!isMobileFilterOpen)}
-            className="flex items-center px-4 py-2 bg-neutral-100 rounded-lg md:hidden"
-          >
-            <AdjustmentsHorizontalIcon className="h-5 w-5 mr-2" />
-            Filters
-          </button>
-        </div>
-        <div className="flex flex-col md:flex-row w-full max-w-[1800px] mx-auto">
-          {/* Collapsible Sidebar Filters - Desktop */}
-          <div className="hidden md:block md:w-1/4 lg:w-1/5 pr-8">
             <button
-              className="mb-4 flex items-center gap-2 text-primary-600 hover:underline focus:outline-none"
-              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="md:hidden btn-outline px-3 py-2 flex items-center gap-2"
+              onClick={() => setIsMobileFilterOpen(true)}
             >
-              <ChevronDownIcon className={`h-5 w-5 transition-transform ${isSidebarOpen ? 'rotate-0' : '-rotate-90'}`} />
-              {isSidebarOpen ? 'Hide Filters' : 'Show Filters'}
+              <AdjustmentsHorizontalIcon className="h-5 w-5" /> Filters
             </button>
-            {isSidebarOpen && (
-              <div className="sticky top-28">
-                <FilterSidebar onFilterChange={handleFilterChange} />
-              </div>
-            )}
-          </div>
-          {/* Sidebar Filters - Mobile Modal */}
-          <div className={`fixed inset-0 bg-neutral-900 bg-opacity-60 z-40 md:hidden transition-opacity duration-300 ${
-            isMobileFilterOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
-          }`}>
-            <div className={`fixed right-0 top-0 h-full bg-white w-4/5 max-w-xs z-50 transform transition-transform duration-300 ease-in-out ${
-              isMobileFilterOpen ? 'translate-x-0' : 'translate-x-full'
-            }`}>
-              <div className="p-4">
-                <FilterSidebar onFilterChange={handleFilterChange} isMobile onClose={() => setIsMobileFilterOpen(false)} />
-              </div>
-            </div>
-          </div>
-          {/* Store Listings */}
-          <div className="w-full md:w-3/4 lg:w-4/5">
-            {filteredStores.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
-                {filteredStores.map(store => (
-                  <StoreCard key={store.id} store={store} />
-                ))}
-              </div>
-            ) : stores.length === 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-8">
-                {[...Array(6)].map((_, i) => (
-                  <div key={i} className="card p-4">
-                    <Skeleton height="h-48" />
-                    <Skeleton height="h-6" className="mt-4 w-3/4" />
-                    <Skeleton height="h-4" className="mt-2 w-1/2" />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <svg className="h-16 w-16 text-neutral-400 mx-auto mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <h3 className="text-lg font-medium text-neutral-900 mb-1">No stores found</h3>
-                <p className="text-neutral-500">
-                  Try adjusting your search or filters to find what you're looking for.
-                </p>
-              </div>
-            )}
           </div>
         </div>
-      </div>
-    </div>
+        {/* Map-based store discovery */}
+        <div className="mb-12">
+          <StoreMap />
+        </div>
+        {/* Store Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {filteredStores.length > 0 ? (
+            filteredStores.map(store => (
+              <StoreCard key={store.id} store={store} />
+            ))
+          ) : (
+            [...Array(8)].map((_, i) => (
+              <div key={i} className="card p-4">
+                <Skeleton height="h-48" />
+                <Skeleton height="h-6" className="mt-4 w-3/4" />
+                <Skeleton height="h-4" className="mt-2 w-1/2" />
+              </div>
+            ))
+          )}
+        </div>
+      </section>
+    </main>
   );
 };
 

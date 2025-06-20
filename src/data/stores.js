@@ -7,7 +7,9 @@ export const stores = [
     rating: 4.8,
     address: "123 Wedding Lane, Fashion District",
     specialties: ["Wedding Gowns", "Bridesmaid Dresses", "Accessories"],
-    description: "Luxury boutique specializing in designer wedding dresses and accessories for the modern bride."
+    description: "Luxury boutique specializing in designer wedding dresses and accessories for the modern bride.",
+    lat: 28.6139, // Example latitude (New Delhi)
+    lng: 77.2090  // Example longitude (New Delhi)
   },
   {
     id: 2,
@@ -17,7 +19,9 @@ export const stores = [
     rating: 4.7,
     address: "456 Tuxedo Avenue, Uptown",
     specialties: ["Tuxedos", "Suits", "Formal Wear"],
-    description: "Premium menswear destination for grooms and groomsmen seeking sophisticated style for the big day."
+    description: "Premium menswear destination for grooms and groomsmen seeking sophisticated style for the big day.",
+    lat: 28.6145,
+    lng: 77.2100
   },
   {
     id: 3,
@@ -27,7 +31,9 @@ export const stores = [
     rating: 4.5,
     address: "789 Celebration Road, Downtown",
     specialties: ["Family Outfits", "Children's Formal Wear", "Guest Attire"],
-    description: "One-stop shop for the entire family's wedding attire needs, from parents to children."
+    description: "One-stop shop for the entire family's wedding attire needs, from parents to children.",
+    lat: 28.6150,
+    lng: 77.2080
   },
   {
     id: 4,
@@ -37,7 +43,9 @@ export const stores = [
     rating: 4.9,
     address: "101 Contemporary Blvd, Arts District",
     specialties: ["Contemporary Bridal", "Unique Designs", "Custom Pieces"],
-    description: "Breaking traditional boundaries with modern, artistic wedding attire for the unconventional couple."
+    description: "Breaking traditional boundaries with modern, artistic wedding attire for the unconventional couple.",
+    lat: 28.6160,
+    lng: 77.2070
   },
   {
     id: 5,
@@ -47,7 +55,9 @@ export const stores = [
     rating: 4.6,
     address: "202 Cultural Avenue, Historic District",
     specialties: ["Cultural Wedding Attire", "Traditional Designs", "Custom Embroidery"],
-    description: "Celebrating cultural heritage through beautifully crafted traditional wedding attire from around the world."
+    description: "Celebrating cultural heritage through beautifully crafted traditional wedding attire from around the world.",
+    lat: 28.6170,
+    lng: 77.2060
   },
   {
     id: 6,
@@ -57,7 +67,9 @@ export const stores = [
     rating: 4.7,
     address: "303 Sparkle Street, Jewelry Quarter",
     specialties: ["Wedding Jewelry", "Veils", "Hair Accessories"],
-    description: "The perfect finishing touches for your wedding day look, from tiaras to custom jewelry."
+    description: "The perfect finishing touches for your wedding day look, from tiaras to custom jewelry.",
+    lat: 28.6180,
+    lng: 77.2050
   },
   {
     id: 7,
@@ -67,7 +79,9 @@ export const stores = [
     rating: 4.9,
     address: "404 Tailoring Terrace, Fashion District",
     specialties: ["Custom Tailoring", "Bespoke Suits", "Custom Gowns"],
-    description: "Specializing in completely customized attire for brides and grooms who want something truly unique."
+    description: "Specializing in completely customized attire for brides and grooms who want something truly unique.",
+    lat: 28.6190,
+    lng: 77.2040
   },
   {
     id: 8,
@@ -77,7 +91,9 @@ export const stores = [
     rating: 4.6,
     address: "505 Celebration Circle, Downtown",
     specialties: ["Bridesmaid Dresses", "Groomsmen Attire", "Group Coordination"],
-    description: "Experts in coordinating attire for the entire wedding party, ensuring everyone looks perfectly matched."
+    description: "Experts in coordinating attire for the entire wedding party, ensuring everyone looks perfectly matched.",
+    lat: 28.6200,
+    lng: 77.2030
   },
   {
     id: 9,
@@ -87,7 +103,9 @@ export const stores = [
     rating: 4.7,
     address: "606 Retro Road, Historic District",
     specialties: ["Vintage Dresses", "Antique Accessories", "Classic Styles"],
-    description: "Curated collection of vintage and vintage-inspired wedding attire from various eras for the nostalgic couple."
+    description: "Curated collection of vintage and vintage-inspired wedding attire from various eras for the nostalgic couple.",
+    lat: 28.6210,
+    lng: 77.2020
   },
   {
     id: 10,
@@ -97,7 +115,9 @@ export const stores = [
     rating: 4.4,
     address: "707 Value Avenue, Shopping Center",
     specialties: ["Affordable Gowns", "Budget Suits", "Sample Sales"],
-    description: "Beautiful wedding attire at accessible price points, perfect for couples planning a wedding on a budget."
+    description: "Beautiful wedding attire at accessible price points, perfect for couples planning a wedding on a budget.",
+    lat: 28.6220,
+    lng: 77.2010
   }
 ];
 

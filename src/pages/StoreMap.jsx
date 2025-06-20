@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 // This example uses Google Maps. Replace with Mapbox if needed.
 import { GoogleMap, Marker, InfoWindow, useLoadScript } from '@react-google-maps/api';
 import stores from '../data/stores';
-import StoreCard from '../components/ui/StoreCard';
 
 const mapContainerStyle = {
   width: '100%',
@@ -25,34 +24,22 @@ const options = {
 };
 
 const StoreMap = () => {
+  const GOOGLE_MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || 'YOUR_GOOGLE_MAPS_API_KEY';
   const { isLoaded, loadError } = useLoadScript({
-    googleMapsApiKey: 'YOUR_GOOGLE_MAPS_API_KEY', // Replace with env var
+    googleMapsApiKey: GOOGLE_MAPS_API_KEY,
   });
   const [selectedStore, setSelectedStore] = useState(null);
-  const [filter, setFilter] = useState('');
-
+  if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY || import.meta.env.VITE_GOOGLE_MAPS_API_KEY === 'YOUR_GOOGLE_MAPS_API_KEY') {
+    return <div className="text-red-600 font-bold p-8">Google Maps API key is missing or invalid. Please set VITE_GOOGLE_MAPS_API_KEY in your .env file.</div>;
+  }
   if (loadError) return <div>Map cannot be loaded</div>;
   if (!isLoaded) return <div>Loading map...</div>;
 
-  // Filter stores by name/category
-  const filteredStores = stores.filter(store =>
-    store.name.toLowerCase().includes(filter.toLowerCase()) ||
-    (store.category && store.category.toLowerCase().includes(filter.toLowerCase()))
-  );
+  // Use all stores (no filter)
+  const filteredStores = stores;
 
   return (
     <div className="w-full max-w-7xl mx-auto my-8">
-      {/* Floating Filter/Search Panel */}
-      <div className="absolute z-10 left-1/2 -translate-x-1/2 top-6 bg-white/90 rounded-2xl shadow-lg px-6 py-3 flex gap-4 items-center backdrop-blur-md">
-        <input
-          type="text"
-          placeholder="Search stores or category..."
-          className="input w-64"
-          value={filter}
-          onChange={e => setFilter(e.target.value)}
-        />
-        {/* Add more filters (distance, etc.) here */}
-      </div>
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         zoom={12}
@@ -84,14 +71,6 @@ const StoreMap = () => {
           </InfoWindow>
         )}
       </GoogleMap>
-      {/* Bottom Sheet: Horizontal scroll of nearby stores */}
-      <div className="fixed bottom-0 left-0 w-full bg-white/95 shadow-2xl rounded-t-3xl px-6 py-4 flex gap-6 overflow-x-auto z-20">
-        {filteredStores.slice(0, 8).map(store => (
-          <div key={store.id} className="min-w-[260px] max-w-[300px]">
-            <StoreCard store={store} onClick={() => setSelectedStore(store)} />
-          </div>
-        ))}
-      </div>
     </div>
   );
 };

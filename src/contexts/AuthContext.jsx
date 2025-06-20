@@ -12,7 +12,9 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const storedUser = localStorage.getItem('avarista_user');
     if (storedUser) {
-      setCurrentUser(JSON.parse(storedUser));
+      const user = JSON.parse(storedUser);
+      if (!user.likedStores) user.likedStores = [];
+      setCurrentUser(user);
     }
     setLoading(false);
   }, []);
@@ -96,13 +98,50 @@ export const AuthProvider = ({ children }) => {
     });
   };
   
+  // Add likedStores to user profile
+  useEffect(() => {
+    const storedUser = localStorage.getItem('avarista_user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      if (!user.likedStores) user.likedStores = [];
+      setCurrentUser(user);
+    }
+    setLoading(false);
+  }, []);
+
+  const likeStore = (storeId) => {
+    setCurrentUser(prev => {
+      if (!prev) return prev;
+      const updated = {
+        ...prev,
+        likedStores: prev.likedStores ? [...new Set([...prev.likedStores, storeId])] : [storeId]
+      };
+      localStorage.setItem('avarista_user', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
+  const unlikeStore = (storeId) => {
+    setCurrentUser(prev => {
+      if (!prev) return prev;
+      const updated = {
+        ...prev,
+        likedStores: prev.likedStores ? prev.likedStores.filter(id => id !== storeId) : []
+      };
+      localStorage.setItem('avarista_user', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   const value = {
     currentUser,
     loading,
     login,
     loginAsRetailer,
     logout,
-    register
+    register,
+    likeStore,
+    unlikeStore
   };
   
   return (
