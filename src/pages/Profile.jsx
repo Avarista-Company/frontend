@@ -38,12 +38,10 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setOrders(mockOrders);
-      setWishlist(JSON.parse(localStorage.getItem('avarista_wishlist')) || mockWishlist);
-      setLoading(false);
-    }, 600);
+    // Load real orders and wishlist from localStorage
+    setOrders(JSON.parse(localStorage.getItem('avarista_orders')) || []);
+    setWishlist(JSON.parse(localStorage.getItem('avarista_wishlist')) || []);
+    setLoading(false);
   }, []);
 
   if (!currentUser) {
@@ -92,16 +90,16 @@ const Profile = () => {
                     </div>
                     <div className="flex gap-4 flex-wrap">
                       {order.items.map(item => (
-                        <div key={item.name} className="flex items-center gap-2">
+                        <div key={item.id} className="flex items-center gap-2">
                           <img src={item.image} alt={item.name} className="w-12 h-12 rounded object-cover" />
                           <div>
                             <div className="font-medium text-neutral-900">{item.name}</div>
-                            <div className="text-xs text-neutral-500">${item.price.toFixed(2)}</div>
+                            <div className="text-xs text-neutral-500">₹{item.price.toFixed(2)}</div>
                           </div>
                         </div>
                       ))}
                     </div>
-                    <div className="mt-2 text-sm text-neutral-700">Total: <span className="font-bold">${order.total.toFixed(2)}</span></div>
+                    <div className="mt-2 text-sm text-neutral-700">Total: <span className="font-bold">₹{order.total.toFixed(2)}</span></div>
                   </div>
                 ))}
               </div>
@@ -118,8 +116,12 @@ const Profile = () => {
                   <div key={item.id} className="card flex flex-col items-center p-4">
                     <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded mb-2" />
                     <div className="font-medium text-neutral-900 mb-1">{item.name}</div>
-                    <div className="text-primary-700 font-bold mb-2">${item.price.toFixed(2)}</div>
-                    <button className="btn-outline w-full">Remove</button>
+                    <div className="text-primary-700 font-bold mb-2">₹{item.price.toFixed(2)}</div>
+                    <button className="btn-outline w-full" onClick={() => {
+                      const updated = wishlist.filter(w => w.id !== item.id);
+                      setWishlist(updated);
+                      localStorage.setItem('avarista_wishlist', JSON.stringify(updated));
+                    }}>Remove</button>
                   </div>
                 ))}
               </div>

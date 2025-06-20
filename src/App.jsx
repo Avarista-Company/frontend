@@ -18,6 +18,7 @@ import NotFound from './pages/NotFound';
 import ProductDetail from './pages/ProductDetail';
 import Profile from './pages/Profile';
 import Cart from './pages/Cart'; // Add this import
+import Checkout from './pages/Checkout';
 
 function App() {
   return (
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/retailer-dashboard" element={<RetailerDashboard />} />
                 <Route path="/product/:productId" element={<ProductDetail />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/checkout" element={<Checkout />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </Layout>

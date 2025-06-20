@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { HeartIcon, ShoppingBagIcon } from '@heroicons/react/24/outline';
 import { HeartIcon as HeartIconSolid } from '@heroicons/react/24/solid';
@@ -6,14 +6,29 @@ import { useCart } from '../../contexts/CartContext';
 import { useToast } from '../../contexts/ToastContext';
 
 const ProductCard = ({ product }) => {
-  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(() => {
+    const wishlist = JSON.parse(localStorage.getItem('avarista_wishlist')) || [];
+    return wishlist.some(item => item.id === product.id);
+  });
   const { addToCart } = useCart();
   const { addToast } = useToast();
 
   const handleWishlist = (e) => {
     e.preventDefault();
-    setIsWishlisted(!isWishlisted);
-    addToast(`${product.name} ${isWishlisted ? 'removed from' : 'added to'} wishlist`);
+    setIsWishlisted(prev => {
+      let wishlist = JSON.parse(localStorage.getItem('avarista_wishlist')) || [];
+      // Deduplicate by product ID
+      wishlist = wishlist.filter(item => item.id !== product.id);
+      let updated;
+      if (prev) {
+        updated = wishlist;
+      } else {
+        updated = [...wishlist, { ...product }];
+      }
+      localStorage.setItem('avarista_wishlist', JSON.stringify(updated));
+      addToast(`${product.name} ${prev ? 'removed from' : 'added to'} wishlist`);
+      return !prev;
+    });
   };
 
   const handleAddToCart = (e) => {

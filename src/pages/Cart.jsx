@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { ShoppingCartIcon } from '@heroicons/react/24/outline';
 import { products } from '../data/products';
 import StoreMap from './StoreMap';
+import ProductCard from '../components/ui/ProductCard';
 
 const Cart = () => {
   // Debug message
@@ -20,8 +21,6 @@ const Cart = () => {
         </span>
         <h1 className="text-3xl font-bold text-neutral-900">Your Cart</h1>
       </div>
-      {/* Debug message visible in UI */}
-      <div style={{color: 'red', fontWeight: 'bold'}}>DEBUG: Cart page loaded</div>
       {cart.length === 0 ? (
         <div className="bg-white rounded-2xl shadow-card p-10 text-center flex flex-col items-center">
           <p className="text-neutral-500 text-lg mb-6">Your cart is empty. Start shopping now!</p>
@@ -84,15 +83,58 @@ const Cart = () => {
               <span className="text-xl font-bold text-neutral-900">Total</span>
               <span className="text-2xl font-bold text-primary-700">₹{(totalPrice * 0.9).toFixed(2)}</span>
             </div>
-            <button className="btn-primary w-full py-3 rounded-full text-lg mt-6">Proceed to Checkout</button>
+            <Link to="/checkout" className="btn-primary w-full py-3 rounded-full text-lg mt-6 block text-center">Proceed to Checkout</Link>
             <Link to="/stores" className="btn-outline w-full py-3 rounded-full text-lg mt-3">Continue Shopping</Link>
           </div>
         </div>
       )}
-      {/* Store Map Section */}
+      {/* Related Products Section */}
       <div className="mt-16">
-        <h2 className="text-2xl font-semibold mb-6 text-neutral-900">Nearby Stores</h2>
-        <StoreMap />
+        <h2 className="text-2xl font-semibold mb-6 text-neutral-900">Related Products</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {products.slice(0, 6).map(product => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </div>
+      {/* Reviews Section */}
+      <div className="mt-16">
+        <h2 className="text-2xl font-semibold mb-6 text-neutral-900">What Customers Say</h2>
+        <div className="flex overflow-x-auto pb-4 space-x-8">
+          <div className="flex-shrink-0 w-80 bg-white p-8 rounded-2xl shadow-card">
+            <ProductCard product={products[0]} />
+            <p className="italic text-neutral-700 mb-4 mt-2">"Great quality and fast delivery! The wedding gown was exactly as pictured."</p>
+            <div className="flex items-center">
+              <img src="https://via.placeholder.com/50?text=JD" alt="User" className="w-10 h-10 rounded-full mr-3" />
+              <div>
+                <p className="font-medium">Jane Davis</p>
+                <p className="text-sm text-neutral-500">Verified Buyer</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex-shrink-0 w-80 bg-white p-8 rounded-2xl shadow-card">
+            <ProductCard product={products[1]} />
+            <p className="italic text-neutral-700 mb-4 mt-2">"Loved the tuxedo! Fit perfectly and the material is premium."</p>
+            <div className="flex items-center">
+              <img src="https://via.placeholder.com/50?text=MS" alt="User" className="w-10 h-10 rounded-full mr-3" />
+              <div>
+                <p className="font-medium">Michael Smith</p>
+                <p className="text-sm text-neutral-500">Verified Buyer</p>
+              </div>
+            </div>
+          </div>
+          <div className="flex-shrink-0 w-80 bg-white p-8 rounded-2xl shadow-card">
+            <ProductCard product={products[2]} />
+            <p className="italic text-neutral-700 mb-4 mt-2">"Customer service was very helpful and the bridesmaid dresses were beautiful!"</p>
+            <div className="flex items-center">
+              <img src="https://via.placeholder.com/50?text=AR" alt="User" className="w-10 h-10 rounded-full mr-3" />
+              <div>
+                <p className="font-medium">Amanda Reynolds</p>
+                <p className="text-sm text-neutral-500">Verified Buyer</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );

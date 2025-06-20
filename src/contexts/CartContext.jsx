@@ -84,8 +84,23 @@ export const CartProvider = ({ children }) => {
     setCart([]);
   };
   
-  // Calculate total price
-  const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  // Place order and save to localStorage
+  const placeOrder = (shipping, payment) => {
+    const orders = JSON.parse(localStorage.getItem('avarista_orders')) || [];
+    const newOrder = {
+      id: `ORD-${Date.now()}`,
+      date: new Date().toISOString().slice(0, 10),
+      total: cart.reduce((sum, item) => sum + item.price * item.quantity, 0),
+      status: 'Placed',
+      items: cart.map(item => ({ ...item })),
+      shipping,
+      payment
+    };
+    localStorage.setItem('avarista_orders', JSON.stringify([newOrder, ...orders]));
+    setCart([]);
+    localStorage.removeItem('avarista_cart');
+    return newOrder;
+  };
   
   // Mock function to add user to community cart
   const addUserToCommunity = (userData) => {
@@ -102,11 +117,11 @@ export const CartProvider = ({ children }) => {
     addToCart,
     removeFromCart,
     updateQuantity,
-    clearCart,
-    totalPrice,
+    placeOrder,
     communityUsers,
     addUserToCommunity,
-    removeUserFromCommunity
+    removeUserFromCommunity,
+    totalPrice: cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
   };
   
   return (
