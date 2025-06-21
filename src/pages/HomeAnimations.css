@@ -25,6 +25,9 @@
   transition: background 0.4s ease-in-out, color 0.4s ease-in-out;
   border-bottom: none;
   position: relative;
+  width: 100%;
+  min-height: 64px;
+  box-sizing: border-box;
 }
 .header-animated-bg.nav-hover {
   background: #f9f9f9;
@@ -207,4 +210,46 @@
   box-shadow: 0 8px 32px 0 rgba(30,41,59,0.12);
   transform: scale(1.05) translateY(0);
   z-index: 10;
+}
+
+/* Responsive navbar enhancements */
+@media (max-width: 768px) {
+  .header-animated-bg nav {
+    flex-wrap: wrap;
+    padding: 0.5rem 1rem;
+  }
+  .header-animated-bg .logo-img {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+  .header-animated-bg .logo-text {
+    font-size: 1.25rem;
+  }
+}
+
+/* Mobile menu: improved look */
+@media (max-width: 768px) {
+  .md\:hidden {
+    display: block !important;
+  }
+  .md\:flex {
+    display: none !important;
+  }
+  .header-animated-bg .mobile-menu {
+    background: #fff;
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 32px 0 rgba(30,41,59,0.10);
+    margin: 0.5rem 0.5rem 0 0.5rem;
+    padding: 1.25rem 1rem;
+    z-index: 40;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 100%;
+    animation: fadeInMobileMenu 0.3s cubic-bezier(.4,0,.2,1);
+  }
+}
+@keyframes fadeInMobileMenu {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }

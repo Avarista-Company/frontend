@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
-import { Bars3Icon, XMarkIcon, ShoppingBagIcon, UserIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon, ShoppingBagIcon, UserIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import '../../pages/HomeAnimations.css'; // Import the CSS for the animated background
 
 const Navbar = () => {
@@ -70,6 +70,18 @@ const Navbar = () => {
           <img src="/images/logo.png" alt="Avarista Logo" className="h-10 w-10 object-contain logo-img" />
           <span className="logo-text">Avarista</span>
         </Link>
+        {/* Search bar (always visible, responsive, between logo and nav) */}
+        <form className="flex items-center gap-2 flex-1 max-w-xs mx-4" role="search" onSubmit={e => e.preventDefault()}>
+          <input
+            type="text"
+            placeholder="Search..."
+            className="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary-400 text-base"
+            style={{ fontFamily: 'Inter, sans-serif' }}
+          />
+          <button type="submit" className="p-2 rounded-lg text-neutral-700 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-400" aria-label="Search">
+            <MagnifyingGlassIcon className="h-6 w-6" />
+          </button>
+        </form>
         {/* Desktop Nav */}
         <div className="hidden md:flex gap-8">
           {navigation.map((item) => (
@@ -122,14 +134,14 @@ const Navbar = () => {
             <Link to="/login" className="btn-outline px-5 py-2 text-base">Sign In</Link>
           )}
         </div>
-        {/* Mobile Menu Button */}
+        {/* Mobile Menu Button (hamburger) */}
         <button className="md:hidden p-2 rounded-lg text-neutral-700 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-400" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Open menu">
           {isMenuOpen ? <XMarkIcon className="h-7 w-7" /> : <Bars3Icon className="h-7 w-7" />}
         </button>
       </nav>
-      {/* Mobile Menu */}
+      {/* Mobile Menu (no search input here) */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white/95 shadow-xl border-t border-neutral-100">
+        <div className="mobile-menu md:hidden">
           <div className="max-w-7xl mx-auto py-4 flex flex-col gap-3 px-4">
             {/* Cart Icon for Individual Cart (Mobile) */}
             <Link to="/cart" className="relative p-2 rounded-lg hover:bg-neutral-100 transition self-start mb-2" aria-label="Cart">
