@@ -1,0 +1,210 @@
+.section-animate {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+}
+.section-animate.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.section-animate-right {
+  opacity: 0;
+  transform: translateX(60px);
+  transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+}
+.section-animate-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Navbar dark by default, light on hover */
+.header-animated-bg {
+  background: #1e1e1e;
+  color: #fff;
+  transition: background 0.4s ease-in-out, color 0.4s ease-in-out;
+  border-bottom: none;
+  position: relative;
+}
+.header-animated-bg.nav-hover {
+  background: #f9f9f9;
+  color: #1e1e1e;
+}
+
+/* Remove header underline ::after */
+.header-animated-bg::after {
+  display: none !important;
+}
+
+/* Logo as a circle, always visible */
+.header-animated-bg .logo-img {
+  border-radius: 50%;
+  background: #fff;
+  padding: 2px;
+  box-shadow: 0 2px 8px 0 rgba(30,41,59,0.10);
+  filter: none !important;
+  transition: box-shadow 0.3s;
+  z-index: 2;
+}
+.header-animated-bg.nav-hover .logo-img {
+  filter: none !important;
+  background: #fff;
+}
+
+/* Ensure logo and text are always visible and not hidden on hover */
+.header-animated-bg .logo-img,
+.header-animated-bg .logo-text {
+  color: #fff;
+  z-index: 2;
+  position: relative;
+}
+.header-animated-bg.nav-hover .logo-img,
+.header-animated-bg.nav-hover .logo-text {
+  color: #1e1e1e;
+}
+
+/* Dropdown menus: always light background, high contrast */
+.nav-dropdown {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px) scale(0.98);
+  transition: opacity 0.32s cubic-bezier(.4,0,.2,1), transform 0.32s cubic-bezier(.4,0,.2,1);
+  position: absolute;
+  left: 50%;
+  top: calc(100% + 16px);
+  min-width: 180px;
+  background: #fff;
+  color: #1e1e1e;
+  border-radius: 1rem;
+  box-shadow: 0 8px 32px 0 rgba(30,41,59,0.12);
+  padding: 1rem 0.5rem;
+  z-index: 30;
+  transform: translate(-50%, 10px);
+}
+.nav-item-parent:hover .nav-dropdown,
+.nav-item-parent:focus-within .nav-dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+.header-animated-bg.nav-hover .nav-dropdown {
+  background: #f9f9f9;
+  color: #1e1e1e;
+}
+
+/* Dropdown link hover: reduce opacity slightly */
+.nav-dropdown a {
+  transition: opacity 0.2s, background 0.2s;
+  opacity: 1;
+}
+.nav-dropdown a:hover, .nav-dropdown a:focus {
+  opacity: 0.7;
+  background: #f3f8fa;
+}
+
+/* Nav item underline: thinner, closer, and better animated */
+.nav-item-parent > a {
+  position: relative;
+  z-index: 1;
+}
+.nav-item-parent > a::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 0;
+  height: 2px;
+  background: #5AC8FA;
+  border-radius: 1px;
+  transition: width 0.25s cubic-bezier(.4,0,.2,1), background 0.25s, height 0.25s, bottom 0.25s;
+}
+.nav-item-parent:hover > a::after,
+.nav-item-parent:focus-within > a::after,
+.nav-item-parent > a.active::after {
+  width: 100%;
+  height: 2.5px;
+  bottom: -1px;
+  background: linear-gradient(90deg, #5AC8FA 60%, #b3e6fc 100%);
+}
+
+/* Remove blue underline from Community Cart nav item */
+.nav-item-parent > a.community-link::after {
+  display: none !important;
+}
+
+/* Uniform nav item styling (including Community) */
+.nav-item-parent > a,
+.nav-item-parent > a.community-link {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+  color: inherit;
+  background: none;
+  border: none;
+  outline: none;
+  transition: color 0.2s, background 0.2s;
+  border-radius: 0.5rem;
+  display: inline-block;
+}
+
+/* User name font color for contrast */
+.header-animated-bg .user-name {
+  color: #fff !important;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+.header-animated-bg.nav-hover .user-name {
+  color: #1e1e1e !important;
+}
+
+.header-card {
+  position: absolute;
+  top: 0;
+  width: 180px;
+  height: 100%;
+  background: #fff;
+  box-shadow: 0 8px 32px 0 rgba(30,41,59,0.10);
+  border-radius: 1.5rem;
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.5s, transform 0.5s;
+  z-index: 10;
+}
+.header-card.right {
+  right: 0;
+  left: auto;
+  transform: translateX(60px);
+}
+.header-animated-bg.nav-hover .header-card {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* AnimatedSection base animation */
+.animated-section {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+}
+.animated-section.visible, .animated-section.animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* AnimatedCard base animation */
+.animated-card {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+}
+.animated-card.visible, .animated-card.animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+.animated-card:hover {
+  box-shadow: 0 8px 32px 0 rgba(30,41,59,0.12);
+  transform: scale(1.05) translateY(0);
+  z-index: 10;
+}

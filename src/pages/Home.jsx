@@ -1,22 +1,44 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import HeroSection from '../components/ui/HeroSection';
 import FeaturedSection from '../components/ui/FeaturedSection';
 import NearbyStoresSection from '../components/ui/NearbyStoresSection';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '../components/common/Loading';
 import TestimonialCarousel from '../components/ui/TestimonialCarousel';
+import './HomeAnimations.css';
 
 const Home = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const sectionRefs = useRef([]);
+  const cardRefs = useRef([]);
 
   useEffect(() => {
     setTimeout(() => setIsLoaded(true), 300);
   }, []);
 
+  useEffect(() => {
+    const observer = new window.IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      },
+      { threshold: 0.2 }
+    );
+    sectionRefs.current.forEach(ref => ref && observer.observe(ref));
+    cardRefs.current.forEach(ref => ref && observer.observe(ref));
+    return () => {
+      sectionRefs.current.forEach(ref => ref && observer.unobserve(ref));
+      cardRefs.current.forEach(ref => ref && observer.unobserve(ref));
+    };
+  }, []);
+
   return (
     <main className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
       {/* Hero Section */}
-      <section className="py-20 md:py-28 bg-white text-center flex flex-col items-center justify-center">
+      <section ref={el => (sectionRefs.current[0] = el)} className="section-animate py-20 md:py-28 bg-white text-center flex flex-col items-center justify-center">
         <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-neutral-900 leading-tight">Effortless Fashion for Every Occasion</h1>
         <p className="text-lg md:text-xl text-neutral-500 mb-8 max-w-2xl mx-auto">Discover, try, and shop the best local styles. Minimal, timeless, and made for you.</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -26,8 +48,7 @@ const Home = () => {
       </section>
 
       {/* Featured Products Section */}
-      <section className="section">
-        <h2 className="section-title mb-8">Featured Products</h2>
+      <section ref={el => (sectionRefs.current[1] = el)} className="section-animate-right section">
         {isLoaded ? <FeaturedSection /> : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {[...Array(4)].map((_, i) => (

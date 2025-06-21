@@ -3,10 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
 import { Bars3Icon, XMarkIcon, ShoppingBagIcon, UserIcon } from '@heroicons/react/24/outline';
+import '../../pages/HomeAnimations.css'; // Import the CSS for the animated background
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [navHover, setNavHover] = useState(false);
   const { currentUser, logout } = useAuth();
   const { cart } = useCart();
   const location = useLocation();
@@ -18,6 +20,30 @@ const Navbar = () => {
     { name: 'AI Suggestions', to: '/ai-feedback' },
     { name: 'Community Cart', to: '/community-cart' },
   ];
+
+  // Example dropdowns for each nav item (customize as needed)
+  const navDropdowns = {
+    Home: [
+      { label: 'Overview', to: '/' },
+      { label: 'Featured', to: '/#featured' },
+    ],
+    Stores: [
+      { label: 'All Stores', to: '/stores' },
+      { label: 'Nearby', to: '/stores#nearby' },
+    ],
+    'Try-On': [
+      { label: 'Virtual Try-On', to: '/try-on' },
+      { label: 'AR/VR Models', to: '/try-on#ar-vr' },
+    ],
+    'AI Suggestions': [
+      { label: 'Get Suggestions', to: '/ai-feedback' },
+      { label: 'How It Works', to: '/ai-feedback#how' },
+    ],
+    'Community Cart': [
+      { label: 'Create Cart', to: '/community-cart' },
+      { label: 'How It Works', to: '/community-cart#how' },
+    ],
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,20 +59,40 @@ const Navbar = () => {
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
-    <header className={`sticky top-0 z-50 bg-white transition-all duration-300 shadow-sm ${isScrolled ? 'shadow-md' : ''}`}>
+    <header
+      className={`header-animated-bg${navHover ? ' nav-hover' : ''}`}
+      onMouseEnter={() => setNavHover(true)}
+      onMouseLeave={() => setNavHover(false)}
+    >
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
         {/* Logo */}
-        <Link to="/" className="font-bold text-2xl tracking-tight text-neutral-900">Avarista</Link>
+        <Link to="/" className="flex items-center gap-2 font-bold text-2xl tracking-tight logo-text">
+          <img src="/images/logo.png" alt="Avarista Logo" className="h-10 w-10 object-contain logo-img" />
+          <span className="logo-text">Avarista</span>
+        </Link>
         {/* Desktop Nav */}
         <div className="hidden md:flex gap-8">
           {navigation.map((item) => (
-            <Link
-              key={item.name}
-              to={item.to}
-              className={`text-base font-medium px-2 py-1 rounded-lg transition hover:bg-neutral-100 hover:text-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-400 ${location.pathname === item.to ? 'text-primary-700 bg-primary-50' : 'text-neutral-700'}`}
-            >
-              {item.name}
-            </Link>
+            <div key={item.name} className="relative nav-item-parent group">
+              <Link
+                to={item.to}
+                className={`text-base font-medium px-2 py-1 rounded-lg transition nav-link${location.pathname === item.to ? ' active' : ''}${item.name.toLowerCase().includes('community') ? ' community-link' : ''}`}
+              >
+                {item.name}
+              </Link>
+              {/* Dropdown menu */}
+              <div className="nav-dropdown">
+                {navDropdowns[item.name]?.map((drop) => (
+                  <Link
+                    key={drop.label}
+                    to={drop.to}
+                    className="block px-4 py-2 text-base rounded-lg hover:bg-primary-50 transition"
+                  >
+                    {drop.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
           ))}
         </div>
         {/* Actions */}
@@ -62,7 +108,7 @@ const Navbar = () => {
             <div className="relative group" tabIndex={0}>
               <button className="flex items-center gap-2 focus:outline-none" aria-haspopup="true" aria-expanded="false">
                 <img src={currentUser.avatar.replace('via.placeholder.com/150', 'images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=100&q=80')} alt={currentUser.name} className="h-8 w-8 rounded-full object-cover border-2 border-primary-200" />
-                <span className="text-base font-medium text-neutral-700">{currentUser.name}</span>
+                <span className="text-base font-medium user-name">{currentUser.name}</span>
               </button>
               <div className="absolute right-0 w-52 mt-2 bg-white rounded-xl shadow-xl py-2 hidden group-hover:block group-focus-within:block show:block">
                 {currentUser.role === 'retailer' && (
