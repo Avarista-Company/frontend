@@ -5,6 +5,7 @@ import NearbyStoresSection from '../components/ui/NearbyStoresSection';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '../components/common/Loading';
 import TestimonialCarousel from '../components/ui/TestimonialCarousel';
+import AnimatedHeroSection from '../components/ui/AnimatedHeroSection';
 import './HomeAnimations.css';
 
 const Home = () => {
@@ -37,6 +38,9 @@ const Home = () => {
 
   return (
     <main className={`transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+      {/* Animated Modern Hero Section */}
+      <AnimatedHeroSection />
+
       {/* Hero Section */}
       <section ref={el => (sectionRefs.current[0] = el)} className="section-animate py-20 md:py-28 bg-white text-center flex flex-col items-center justify-center">
         <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-neutral-900 leading-tight">Effortless Fashion for Every Occasion</h1>

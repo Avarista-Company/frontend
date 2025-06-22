@@ -67,7 +67,7 @@ const Navbar = () => {
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3 md:py-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 font-bold text-2xl tracking-tight logo-text">
-          <img src="/images/logo.png" alt="Avarista Logo" className="h-10 w-10 object-contain logo-img" />
+          <img src="/images/logo.png" alt="Avarista Logo" className="h-14 w-14 object-contain logo-img" />
           <span className="logo-text">Avarista</span>
         </Link>
         {/* Search bar (always visible, responsive, between logo and nav) */}
