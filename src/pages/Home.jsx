@@ -18,6 +18,13 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      // If user prefers reduced motion, skip animation
+      document.querySelectorAll('.section-animate').forEach(el => {
+        el.classList.add('visible');
+      });
+      return;
+    }
     const observer = new window.IntersectionObserver(
       entries => {
         entries.forEach(entry => {
@@ -42,9 +49,13 @@ const Home = () => {
       <AnimatedHeroSection />
 
       {/* Hero Section */}
-      <section ref={el => (sectionRefs.current[0] = el)} className="section-animate py-20 md:py-28 bg-white text-center flex flex-col items-center justify-center">
-        <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight text-neutral-900 leading-tight">Effortless Fashion for Every Occasion</h1>
-        <p className="text-lg md:text-xl text-neutral-500 mb-8 max-w-2xl mx-auto">Discover, try, and shop the best local styles. Minimal, timeless, and made for you.</p>
+      <section
+        ref={el => (sectionRefs.current[0] = el)}
+        className="section-animate home-hero-typography bg-[#e9e4e0] text-[#1a1a1a] text-center flex flex-col items-center justify-center px-4 py-20 md:py-28"
+        style={{ minHeight: '40vh' }}
+      >
+        <h1 className="home-hero-title mb-6">Effortless Fashion for Every Occasion</h1>
+        <p className="home-hero-tagline mb-8 max-w-2xl mx-auto">Discover, try, and shop the best local styles. Minimal, timeless, and made for you.</p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link to="/stores" className="btn-primary text-lg px-8 py-3 rounded-full">Shop Stores</Link>
           <Link to="/try-on" className="btn-outline text-lg px-8 py-3 rounded-full">Virtual Try-On</Link>

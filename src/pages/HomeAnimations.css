@@ -1,21 +1,31 @@
 .section-animate {
   opacity: 0;
-  transform: translateX(-60px);
-  transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+  transform: translateY(40px);
+  transition: opacity 0.85s cubic-bezier(.4,0,.2,1), transform 0.85s cubic-bezier(.4,0,.2,1);
 }
 .section-animate.visible {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
 }
 
-.section-animate-right {
+.home-hero-title {
   opacity: 0;
-  transform: translateX(60px);
-  transition: opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1);
+  transform: translateY(40px);
+  transition: opacity 0.85s cubic-bezier(.4,0,.2,1), transform 0.85s cubic-bezier(.4,0,.2,1);
 }
-.section-animate-right.visible {
+.section-animate.visible .home-hero-title {
   opacity: 1;
-  transform: translateX(0);
+  transform: translateY(0);
+}
+
+.home-hero-tagline {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.85s 0.12s cubic-bezier(.4,0,.2,1), transform 0.85s 0.12s cubic-bezier(.4,0,.2,1);
+}
+.section-animate.visible .home-hero-tagline {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Navbar dark by default, light on hover */
@@ -414,7 +424,63 @@
   }
 }
 
-/* Ensure nav and actions don't overflow or wrap weirdly */
-.header-animated-bg nav > * {
-  min-width: 0;
+/* Hero section styles */
+.home-hero-typography {
+  font-family: 'Roboto', Arial, Helvetica, sans-serif;
+  background: #e9e4e0;
+  color: #1a1a1a;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+  border-radius: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 32px 0 rgba(166,25,46,0.06);
+  position: relative;
+}
+
+.home-hero-title {
+  font-size: 2.7rem;
+  font-weight: 900;
+  line-height: 1.13;
+  letter-spacing: -0.01em;
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.85s cubic-bezier(.4,0,.2,1), transform 0.85s cubic-bezier(.4,0,.2,1);
+}
+
+.home-hero-tagline {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  margin-bottom: 2rem;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.85s 0.12s cubic-bezier(.4,0,.2,1), transform 0.85s 0.12s cubic-bezier(.4,0,.2,1);
+}
+
+.section-animate.visible .home-hero-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+.section-animate.visible .home-hero-tagline {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (min-width: 768px) {
+  .home-hero-title {
+    font-size: 3.3rem;
+  }
+  .home-hero-tagline {
+    font-size: 1.45rem;
+  }
+  .home-hero-typography {
+    padding-top: 7rem;
+    padding-bottom: 7rem;
+    border-radius: 2rem;
+  }
 }
