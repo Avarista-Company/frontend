@@ -1,17 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useCart } from '../../contexts/CartContext';
-import { Bars3Icon, XMarkIcon, ShoppingBagIcon, UserIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import '../../pages/HomeAnimations.css'; // Import the CSS for the animated background
+import '../../pages/MainPageStyles.css';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [navHover, setNavHover] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const { currentUser, logout } = useAuth();
   const { cart } = useCart();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const navigation = [
     { name: 'Home', to: '/' },
@@ -58,132 +61,102 @@ const Navbar = () => {
   // Calculate total cart items
   const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
+  // Handler for logout: clear user and redirect
+  const handleLogout = () => {
+    if (typeof logout === 'function') logout(); // clear user from context
+    setDropdownOpen(false);
+    navigate('/login');
+  };
+
   return (
-    <header
-      className={`header-animated-bg${navHover ? ' nav-hover' : ''}`}
-      onMouseEnter={() => setNavHover(true)}
-      onMouseLeave={() => setNavHover(false)}
-    >
-      <nav className={`w-full z-30 sticky top-0 bg-[#a6192e] shadow-lg transition-colors duration-300`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo and Brand */}
-            <div className="flex-shrink-0 flex items-center">
-              <Link to="/" className="flex items-center gap-2 font-bold text-2xl tracking-tight logo-text">
-                <img src="/images/logo.png" alt="Avarista Logo" className="h-14 w-14 object-contain logo-img" />
-                <span className="logo-text">Avarista</span>
-              </Link>
-            </div>
-            {/* Search bar and nav items */}
-            <div className="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-              {/* Search bar (always visible, responsive, between logo and nav) */}
-              <form className="flex items-center gap-2 flex-1 max-w-xs mx-4" role="search" onSubmit={e => e.preventDefault()}>
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="w-full px-3 py-2 rounded-lg border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-primary-400 text-base"
-                  style={{ fontFamily: 'Inter, sans-serif' }}
-                />
-                <button type="submit" className="p-2 rounded-lg text-neutral-700 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-400" aria-label="Search">
-                  <MagnifyingGlassIcon className="h-6 w-6" />
-                </button>
-              </form>
-            </div>
-            {/* Nav links and icons */}
-            <div className="hidden md:flex items-center space-x-4">
-              {navigation.map((item) => (
-                <div key={item.name} className="relative nav-item-parent group">
-                  <Link
-                    to={item.to}
-                    className={`text-base font-medium px-2 py-1 rounded-lg transition nav-link${location.pathname === item.to ? ' active' : ''}${item.name.toLowerCase().includes('community') ? ' community-link' : ''}`}
-                  >
-                    {item.name}
-                  </Link>
-                  {/* Dropdown menu */}
-                  <div className="nav-dropdown">
-                    {navDropdowns[item.name]?.map((drop) => (
-                      <Link
-                        key={drop.label}
-                        to={drop.to}
-                        className="block px-4 py-2 text-base rounded-lg hover:bg-primary-50 transition"
-                      >
-                        {drop.label}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              ))}
-              {/* Single Cart Icon for Individual Cart */}
-              <Link to="/cart" className="relative p-2 rounded-lg hover:bg-neutral-100 transition" aria-label="Cart">
-                <ShoppingBagIcon className="h-6 w-6 text-primary-600" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center shadow">{cartCount}</span>
-                )}
-              </Link>
-              {currentUser ? (
-                <div className="relative group" tabIndex={0}>
-                  <button className="flex items-center gap-2 focus:outline-none" aria-haspopup="true" aria-expanded="false">
-                    <img src={currentUser.avatar.replace('via.placeholder.com/150', 'images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=100&q=80')} alt={currentUser.name} className="h-8 w-8 rounded-full object-cover border-2 border-primary-200" />
-                    <span className="text-base font-medium user-name">{currentUser.name}</span>
-                  </button>
-                  <div className="absolute right-0 w-52 mt-2 bg-white rounded-xl shadow-xl py-2 hidden group-hover:block group-focus-within:block show:block">
-                    {currentUser.role === 'retailer' && (
-                      <Link to="/retailer-dashboard" className="block px-4 py-2 text-base text-neutral-700 hover:bg-primary-50 rounded-lg">Dashboard</Link>
-                    )}
-                    <Link to="/profile" className="block px-4 py-2 text-base text-neutral-700 hover:bg-primary-50 rounded-lg">Profile</Link>
-                    <button onClick={logout} className="block w-full text-left px-4 py-2 text-base text-red-600 hover:bg-red-50 rounded-lg">Logout</button>
-                  </div>
-                </div>
-              ) : (
-                <Link to="/login" className="btn-outline px-5 py-2 text-base">Sign In</Link>
-              )}
-            </div>
-            {/* Mobile menu button */}
-            <div className="flex md:hidden">
-              <button className="p-2 rounded-lg text-neutral-700 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-primary-400" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Open menu">
-                {isMenuOpen ? <XMarkIcon className="h-7 w-7" /> : <Bars3Icon className="h-7 w-7" />}
-              </button>
-            </div>
-          </div>
-        </div>
-        {/* Mobile menu dropdown */}
-        {isMenuOpen && (
-          <div className="mobile-menu md:hidden">
-            <div className="max-w-7xl mx-auto py-4 flex flex-col gap-3 px-4">
-              {/* Cart Icon for Individual Cart (Mobile) */}
-              <Link to="/cart" className="relative p-2 rounded-lg hover:bg-neutral-100 transition self-start mb-2" aria-label="Cart">
-                <ShoppingBagIcon className="h-6 w-6 text-primary-600" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center shadow">{cartCount}</span>
-                )}
-              </Link>
-              {navigation.map((item) => (
+    <header className="header">
+      <div className="container header-inner" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        {/* Logo */}
+        <Link to="/about_us" className="logo" style={{ display: 'flex', alignItems: 'center', fontWeight: 700, fontSize: 28, letterSpacing: 1 }}>
+          Avari<span>sta</span>
+        </Link>
+        {/* Main nav links (centered) */}
+        <nav style={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <ul className="hidden md:flex items-center space-x-4" style={{ listStyle: 'none', margin: 0, padding: 0 }}>
+            {navigation.map((item) => (
+              <li key={item.name} className="relative nav-item-parent group" style={{ display: 'flex', alignItems: 'center' }}>
                 <Link
-                  key={item.name}
                   to={item.to}
-                  className={`text-base font-medium px-3 py-2 rounded-lg transition hover:bg-neutral-100 hover:text-primary-600 focus:outline-none focus:ring-2 focus:ring-primary-400 ${location.pathname === item.to ? 'text-primary-700 bg-primary-50' : 'text-neutral-700'}`}
-                  onClick={closeMenu}
+                  className={`text-base font-medium px-2 py-1 rounded-lg transition nav-link hover:text-black focus:outline-none focus:ring-0${location.pathname === item.to ? ' active' : ''}${item.name.toLowerCase().includes('community') ? ' community-link' : ''}`}
                 >
                   {item.name}
                 </Link>
-              ))}
-              <div className="mt-2">
-                {currentUser ? (
-                  <>
-                    <Link to="/profile" className="block px-3 py-2 text-base text-neutral-700 hover:bg-primary-50 rounded-lg" onClick={closeMenu}>Profile</Link>
-                    {currentUser.role === 'retailer' && (
-                      <Link to="/retailer-dashboard" className="block px-3 py-2 text-base text-neutral-700 hover:bg-primary-50 rounded-lg" onClick={closeMenu}>Dashboard</Link>
-                    )}
-                    <button onClick={logout} className="block w-full text-left px-3 py-2 text-base text-red-600 hover:bg-red-50 rounded-lg">Logout</button>
-                  </>
-                ) : (
-                  <Link to="/login" className="btn-outline px-5 py-2 text-base w-full block text-center" onClick={closeMenu}>Sign In</Link>
-                )}
-              </div>
-            </div>
+                {/* Dropdown menu */}
+                <div className="nav-dropdown">
+                  {navDropdowns[item.name]?.map((drop) => (
+                    <Link
+                      key={drop.label}
+                      to={drop.to}
+                      className="block px-4 py-2 text-base rounded-lg transition hover:text-black focus:outline-none focus:ring-0"
+                    >
+                      {drop.label}
+                    </Link>
+                  ))}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        {/* Icon bar (search, heart, user, cart) */}
+        <div className="nav-icons" style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+          <div className="icon">
+            <i className="fas fa-search"></i>
           </div>
-        )}
-      </nav>
+          <div className="icon">
+            <i className="far fa-heart"></i>
+          </div>
+          {/* <div className="icon">
+            <i className="far fa-user"></i>
+          </div> */}
+          <div className="icon">
+            <i className="fas fa-shopping-bag"></i>
+          </div>
+          {/* Avatar only, rightmost, with dropdown on click and improved logic for auth */}
+          {(currentUser && currentUser.name && currentUser.avatar) ? (
+            <div className="relative ml-4" style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+              <button
+                className="flex items-center focus:outline-none"
+                aria-haspopup="true"
+                aria-expanded={dropdownOpen ? 'true' : 'false'}
+                onClick={() => setDropdownOpen((open) => !open)}
+                onBlur={() => setDropdownOpen(false)}
+                style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+              >
+                <img src={currentUser.avatar.replace('via.placeholder.com/150', 'images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=100&q=80')} alt={currentUser.name} className="h-8 w-8 rounded-full object-cover border-2 border-primary-200" />
+              </button>
+              {dropdownOpen && (
+                <div
+                  className="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-xl py-2 z-50 animate-fadeIn"
+                  style={{ minWidth: 160, border: '1px solid #eee', boxShadow: '0 8px 24px rgba(0,0,0,0.12)' }}
+                  tabIndex={-1}
+                  onMouseDown={e => e.preventDefault()}
+                >
+                  <button
+                    className="block w-full text-left px-4 py-2 text-base text-neutral-700 hover:bg-primary-50 rounded-lg focus:outline-none focus:ring-0 transition"
+                    onClick={() => { setDropdownOpen(false); navigate('/profile'); }}
+                  >
+                    <i className="far fa-user mr-2"></i> Profile
+                  </button>
+                  <button
+                    className="block w-full text-left px-4 py-2 text-base"
+                    style={{ color: '#d11b1b' }}
+                    onClick={handleLogout}
+                  >
+                    <i className="fas fa-sign-out-alt mr-2"></i> Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link to="/login" className="btn-outline px-5 py-2 text-base ml-4">Sign In</Link>
+          )}
+        </div>
+      </div>
     </header>
   );
 };
